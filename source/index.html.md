@@ -31,7 +31,7 @@ This is a very simple modification to enable the game's host to restart the game
 
 ### GameManager.cs
 
-> Look for lll and replace with
+Look for lll and replace with
 ```csharp
 public GameObject restartButton;
 ```

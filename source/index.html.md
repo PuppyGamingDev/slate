@@ -71,6 +71,8 @@ void Restart()
   PhotonNetwork.LoadLevel("Game");
 }
 
+Add these methodsand save the script
+
 ### Canvas in Game Scene
 
 In the GameOverPanel gameobject, add a button and set the gameobject as inactive.

@@ -30,7 +30,9 @@ This is a very simple modification to enable the game's host to restart the game
 ## GameManager.cs
 
 ### References
+
 > References
+
 ```csharp
 public GameObject restartButton;
 ```
@@ -39,7 +41,7 @@ Add this GameObject reference to the script.
 
 ### void Start()
 
-> void Awake
+> void Start
 
 ```csharp
 if (PhotonNetwork.IsMasterClient)

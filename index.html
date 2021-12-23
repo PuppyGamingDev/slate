@@ -341,49 +341,58 @@
 <p>Welcome to the modifications documentation for Super Multiplayer Shooter Template. I am hoping to hold all the code snippets and written guide for modifications in my videos and also for some more bespoke modifications I have made.</p>
 <h1 id='host-can-restart-game'>Host Can Restart Game</h1>
 <p>This is a very simple modification to enable the game&#39;s host to restart the game once it&#39;s finished to avoid going back to the Lobby.</p>
-<h2 id='gamemanager-cs'>GameManager.cs</h2><h3 id='references'>References</h3><div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="n">GameObject</span> <span class="n">restartButton</span><span class="p">;</span>
-</code></pre></div>
+<h2 id='gamemanager-cs'>GameManager.cs</h2><h3 id='references'>References</h3>
 <blockquote>
-<p>references
-Add this GameObject reference to the script.</p>
+<p>References
+<code>csharp
+public GameObject restartButton;
+</code></p>
 </blockquote>
-<h3 id='void-start'>void Start()</h3><div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">if</span> <span class="p">(</span><span class="n">PhotonNetwork</span><span class="p">.</span><span class="n">IsMasterClient</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="n">restart</span><span class="p">.</span><span class="n">Button</span><span class="p">.</span><span class="nf">SetActive</span><span class="p">(</span><span class="k">true</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
+
+<p>Add this GameObject reference to the script.</p>
+<h3 id='void-start'>void Start()</h3>
 <blockquote>
-<p>void Start()</p>
+<p>void Awake
+<code>csharp
+if (PhotonNetwork.IsMasterClient)
+{
+  restart.Button.SetActive(true);
+}
+</code></p>
 </blockquote>
 
 <p>In void Start(), add this</p>
-<h3 id='void-awake'>void Awake()</h3><div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="n">PhotonNetwork</span><span class="p">.</span><span class="n">AutomaticallySyncScene</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-</code></pre></div>
+<h3 id='void-awake'>void Awake()</h3>
 <blockquote>
-<p>void Awake()</p>
+<p>void Awake
+<code>csharp
+PhotonNetwork.AutomaticallySyncScene = true;
+</code></p>
 </blockquote>
 
 <p>In void Awake(), add this</p>
-<h3 id='add-restart-methods'>Add restart methods</h3><div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="k">void</span> <span class="nf">RestartButton</span><span class="p">()</span>
-<span class="p">{</span>
-  <span class="n">photonView</span><span class="p">.</span><span class="nf">RPC</span><span class="p">(</span><span class="s">"Restart"</span><span class="p">,</span> <span class="n">RpcTarget</span><span class="p">.</span><span class="n">All</span><span class="p">);</span>
-<span class="p">}</span>
-<span class="p">[</span><span class="n">PunRPC</span><span class="p">]</span>
-<span class="k">void</span> <span class="nf">Restart</span><span class="p">()</span>
-<span class="p">{</span>
-  <span class="n">ExitGames</span><span class="p">.</span><span class="n">Client</span><span class="p">.</span><span class="n">Photon</span><span class="p">.</span><span class="n">Hashtable</span> <span class="n">table</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ExitGames</span><span class="p">.</span><span class="n">Client</span><span class="p">.</span><span class="n">Photon</span><span class="p">.</span><span class="nf">Hashtable</span><span class="p">();</span>
-  <span class="n">table</span><span class="p">.</span><span class="nf">Clear</span><span class="p">();</span>
-  <span class="n">table</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="s">"kills"</span><span class="p">,</span> <span class="m">0</span><span class="p">);</span>
-  <span class="n">table</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="s">"deaths"</span><span class="p">,</span> <span class="m">0</span><span class="p">);</span>
-  <span class="n">table</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="s">"otherscore"</span><span class="p">,</span> <span class="m">0</span><span class="p">);</span>
-  <span class="n">PhotonNetwork</span><span class="p">.</span><span class="n">LocalPlayer</span><span class="p">.</span><span class="nf">SetCustomProperties</span><span class="p">(</span><span class="n">table</span><span class="p">);</span>
-  <span class="n">ui</span><span class="p">.</span><span class="nf">UpdateBoards</span><span class="p">();</span>
-  <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"Stats Reset"</span><span class="p">);</span>
-  <span class="n">PhotonNetwork</span><span class="p">.</span><span class="nf">LoadLevel</span><span class="p">(</span><span class="s">"Game"</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
+<h3 id='add-restart-methods'>Add restart methods</h3>
 <blockquote>
-<p>Restart methods</p>
+<p>Restart methods
+<code>csharp
+public void RestartButton()
+{
+  photonView.RPC(&quot;Restart&quot;, RpcTarget.All);
+}
+[PunRPC]
+void Restart()
+{
+  ExitGames.Client.Photon.Hashtable table = new ExitGames.Client.Photon.Hashtable();
+  table.Clear();
+  table.Add(&quot;kills&quot;, 0);
+  table.Add(&quot;deaths&quot;, 0);
+  table.Add(&quot;otherscore&quot;, 0);
+  PhotonNetwork.LocalPlayer.SetCustomProperties(table);
+  ui.UpdateBoards();
+  Debug.Log(&quot;Stats Reset&quot;);
+  PhotonNetwork.LoadLevel(&quot;Game&quot;);
+}
+</code></p>
 </blockquote>
 
 <p>Add these methodsand save the script</p>

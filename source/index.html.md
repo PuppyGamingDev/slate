@@ -30,36 +30,35 @@ This is a very simple modification to enable the game's host to restart the game
 ## GameManager.cs
 
 ### References
-
+> References
 ```csharp
 public GameObject restartButton;
 ```
-> references
+
 Add this GameObject reference to the script.
 
 ### void Start()
-
+> void Awake
 ```csharp
 if (PhotonNetwork.IsMasterClient)
 {
   restart.Button.SetActive(true);
 }
 ```
-> void Start()
 
 In void Start(), add this
 
 ### void Awake()
-
+> void Awake
 ```csharp
 PhotonNetwork.AutomaticallySyncScene = true;
 ```
-> void Awake()
 
 In void Awake(), add this
 
 ### Add restart methods
 
+> Restart methods
 ```csharp
 public void RestartButton()
 {
@@ -79,7 +78,6 @@ void Restart()
   PhotonNetwork.LoadLevel("Game");
 }
 ```
-> Restart methods
 
 Add these methodsand save the script
 

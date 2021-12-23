@@ -35,3 +35,11 @@ This is a very simple modification to enable the game's host to restart the game
 public GameObject restartButton;
 ```
 look for blah and replace with
+
+```csharp
+void Restart()
+{
+
+}
+```
+Now add this method

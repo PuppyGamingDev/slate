@@ -31,12 +31,9 @@ This is a very simple modification to enable the game's host to restart the game
 
 ### GameManager.cs
 
-> Look for 
+> Look for lll and replace with
 ```csharp
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
+public GameObject restartButton;
 ```
 
 

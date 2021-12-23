@@ -38,7 +38,9 @@ public GameObject restartButton;
 Add this GameObject reference to the script.
 
 ### void Start()
+
 > void Awake
+
 ```csharp
 if (PhotonNetwork.IsMasterClient)
 {
@@ -49,7 +51,9 @@ if (PhotonNetwork.IsMasterClient)
 In void Start(), add this
 
 ### void Awake()
+
 > void Awake
+
 ```csharp
 PhotonNetwork.AutomaticallySyncScene = true;
 ```
@@ -59,6 +63,7 @@ In void Awake(), add this
 ### Add restart methods
 
 > Restart methods
+
 ```csharp
 public void RestartButton()
 {

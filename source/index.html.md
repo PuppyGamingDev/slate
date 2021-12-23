@@ -21,20 +21,22 @@ meta:
 
 # Introduction
 
-Welcome to the modifications documentation for Puppy Gaming. I am hoping to hold all the code snippets and written guide for modifications in my videos and also for some more bespoke modifications I have made.
+Welcome to the modifications documentation for Super Multiplayer Shooter Template. I am hoping to hold all the code snippets and written guide for modifications in my videos and also for some more bespoke modifications I have made.
 
-# Super Multiplayer Shooter Template
-
-## Host can restart game
+# Host Can Restart Game
 
 This is a very simple modification to enable the game's host to restart the game once it's finished to avoid going back to the Lobby.
 
-### GameManager.cs
+## GameManager.cs
+
+### References
 
 ```csharp
 public GameObject restartButton;
 ```
 Add this GameObject reference to the script.
+
+### void Start()
 
 ```csharp
 if (PhotonNetwork.IsMasterClient)
@@ -45,12 +47,15 @@ if (PhotonNetwork.IsMasterClient)
 
 In void Start(), add this
 
+### void Awake()
 
 ```csharp
 PhotonNetwork.AutomaticallySyncScene = true;
 ```
 
 In void Awake(), add this
+
+### Add restart methods
 
 ```csharp
 public void RestartButton()
@@ -74,9 +79,7 @@ void Restart()
 
 Add these methodsand save the script
 
-### Canvas in Game Scene
-
-
+## Canvas in Game Scene
 
 In the GameOverPanel gameobject, add a button and set the gameobject as inactive.
 Drag the Managers Gameobject into the new button's OnClick() and set the function to GameManager>RestartButton.

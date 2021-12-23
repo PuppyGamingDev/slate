@@ -343,16 +343,14 @@
 <p>This is a very simple modification to enable the game&#39;s host to restart the game once it&#39;s finished to avoid going back to the Lobby.</p>
 <h2 id='gamemanager-cs'>GameManager.cs</h2><h3 id='references'>References</h3>
 <blockquote>
-<p>References
-<code>csharp
-public GameObject restartButton;
-</code></p>
+<p>References</p>
 </blockquote>
-
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="n">GameObject</span> <span class="n">restartButton</span><span class="p">;</span>
+</code></pre></div>
 <p>Add this GameObject reference to the script.</p>
 <h3 id='void-start'>void Start()</h3>
 <blockquote>
-<p>void Awake</p>
+<p>void Start</p>
 </blockquote>
 <div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">if</span> <span class="p">(</span><span class="n">PhotonNetwork</span><span class="p">.</span><span class="n">IsMasterClient</span><span class="p">)</span>
 <span class="p">{</span>

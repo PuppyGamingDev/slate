@@ -74,6 +74,9 @@ void Restart()
 Add these methodsand save the script
 
 ### Canvas in Game Scene
+```csharp
+There is no code for a Scene
+```
 
 In the GameOverPanel gameobject, add a button and set the gameobject as inactive.
 Drag the Managers Gameobject into the new button's OnClick() and set the function to GameManager>RestartButton.

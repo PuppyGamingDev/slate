@@ -34,12 +34,46 @@ This is a very simple modification to enable the game's host to restart the game
 ```csharp
 public GameObject restartButton;
 ```
-look for blah and replace with
+Add this GameObject reference to the script.
 
 ```csharp
-void Restart()
+if (PhotonNetwork.IsMasterClient)
 {
-
+  restart.Button.SetActive(true);
 }
 ```
-Now add this method
+
+In void Start(), add this
+
+
+```csharp
+PhotonNetwork.AutomaticallySyncScene = true;
+```
+
+In void Awake(), add this
+
+```csharp
+public void RestartButton()
+{
+  photonView.RPC("Restart", RpcTarget.All);
+}
+[PunRPC]
+void Restart()
+{
+  ExitGames.Client.Photon.Hashtable table = new ExitGames.Client.Photon.Hashtable();
+  table.Clear();
+  table.Add("kills", 0);
+  table.Add("deaths", 0);
+  table.Add("otherscore", 0);
+  PhotonNetwork.LocalPlayer.SetCustomProperties(table);
+  ui.UpdateBoards();
+  Debug.Log("Stats Reset");
+  PhotonNetwork.LoadLevel("Game");
+}
+
+### Canvas in Game Scene
+
+In the GameOverPanel gameobject, add a button and set the gameobject as inactive.
+Drag the Managers Gameobject into the new button's OnClick() and set the function to GameManager>RestartButton.
+
+Then add these functions.

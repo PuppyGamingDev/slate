@@ -340,14 +340,43 @@
 <p>This is a very simple modification to enable the game&#39;s host to restart the game once it&#39;s finished to avoid going back to the Lobby.</p>
 <h3 id='gamemanager-cs'>GameManager.cs</h3><div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="n">GameObject</span> <span class="n">restartButton</span><span class="p">;</span>
 </code></pre></div>
-<p>look for blah and replace with</p>
-<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">void</span> <span class="nf">Restart</span><span class="p">()</span>
+<p>Add this GameObject reference to the script.</p>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">if</span> <span class="p">(</span><span class="n">PhotonNetwork</span><span class="p">.</span><span class="n">IsMasterClient</span><span class="p">)</span>
 <span class="p">{</span>
-
+  <span class="n">restart</span><span class="p">.</span><span class="n">Button</span><span class="p">.</span><span class="nf">SetActive</span><span class="p">(</span><span class="k">true</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>Now add this method</p>
-<h1 id='troubleshooting'>Troubleshooting</h1>
+<p>In void Start(), add this</p>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="n">PhotonNetwork</span><span class="p">.</span><span class="n">AutomaticallySyncScene</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+</code></pre></div>
+<p>In void Awake(), add this</p>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="k">void</span> <span class="nf">RestartButton</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">photonView</span><span class="p">.</span><span class="nf">RPC</span><span class="p">(</span><span class="s">"Restart"</span><span class="p">,</span> <span class="n">RpcTarget</span><span class="p">.</span><span class="n">All</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="p">[</span><span class="n">PunRPC</span><span class="p">]</span>
+<span class="k">void</span> <span class="nf">Restart</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">ExitGames</span><span class="p">.</span><span class="n">Client</span><span class="p">.</span><span class="n">Photon</span><span class="p">.</span><span class="n">Hashtable</span> <span class="n">table</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ExitGames</span><span class="p">.</span><span class="n">Client</span><span class="p">.</span><span class="n">Photon</span><span class="p">.</span><span class="nf">Hashtable</span><span class="p">();</span>
+  <span class="n">table</span><span class="p">.</span><span class="nf">Clear</span><span class="p">();</span>
+  <span class="n">table</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="s">"kills"</span><span class="p">,</span> <span class="m">0</span><span class="p">);</span>
+  <span class="n">table</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="s">"deaths"</span><span class="p">,</span> <span class="m">0</span><span class="p">);</span>
+  <span class="n">table</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="s">"otherscore"</span><span class="p">,</span> <span class="m">0</span><span class="p">);</span>
+  <span class="n">PhotonNetwork</span><span class="p">.</span><span class="n">LocalPlayer</span><span class="p">.</span><span class="nf">SetCustomProperties</span><span class="p">(</span><span class="n">table</span><span class="p">);</span>
+  <span class="n">ui</span><span class="p">.</span><span class="nf">UpdateBoards</span><span class="p">();</span>
+  <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"Stats Reset"</span><span class="p">);</span>
+  <span class="n">PhotonNetwork</span><span class="p">.</span><span class="nf">LoadLevel</span><span class="p">(</span><span class="s">"Game"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">Add</span> <span class="n">these</span> <span class="n">methodsand</span> <span class="n">save</span> <span class="n">the</span> <span class="n">script</span>
+
+<span class="err">###</span> <span class="n">Canvas</span> <span class="k">in</span> <span class="n">Game</span> <span class="n">Scene</span>
+
+<span class="n">In</span> <span class="n">the</span> <span class="n">GameOverPanel</span> <span class="n">gameobject</span><span class="p">,</span> <span class="k">add</span> <span class="n">a</span> <span class="n">button</span> <span class="n">and</span> <span class="k">set</span> <span class="n">the</span> <span class="n">gameobject</span> <span class="k">as</span> <span class="n">inactive</span><span class="p">.</span>
+<span class="n">Drag</span> <span class="n">the</span> <span class="n">Managers</span> <span class="n">Gameobject</span> <span class="k">into</span> <span class="n">the</span> <span class="k">new</span> <span class="n">button</span><span class="err">'</span><span class="n">s</span> <span class="nf">OnClick</span><span class="p">()</span> <span class="n">and</span> <span class="k">set</span> <span class="n">the</span> <span class="n">function</span> <span class="n">to</span> <span class="n">GameManager</span><span class="p">&gt;</span><span class="n">RestartButton</span><span class="p">.</span>
+
+<span class="n">Then</span> <span class="k">add</span> <span class="n">these</span> <span class="n">functions</span><span class="p">.</span>
+</code></pre></div><h1 id='troubleshooting'>Troubleshooting</h1>
 <aside class="notice">
 If you have any issues please feel free to contact me in the support Discords for the covered assets or emailing puppygamingdev@gmail.com
 </aside>

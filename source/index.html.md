@@ -1,5 +1,5 @@
 ---
-title: API Reference
+title: PuppyGaming Docs
 
 language_tabs: # must be one of https://git.io/vQNgJ
   - csharp
@@ -15,7 +15,7 @@ search: true
 code_clipboard: true
 
 meta:
-  - name: description
+  - name: Puppy Gaming
     content: Documentation for Puppy Gaming modifications
 ---
 

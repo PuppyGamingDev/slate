@@ -327,6 +327,26 @@
               </ul>
           </li>
           <li>
+            <a href="#cosmetics-with-cbs-inventory" class="toc-h1 toc-link" data-title="Cosmetics with CBS Inventory">Cosmetics with CBS Inventory</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#charactercustomizer-cs" class="toc-h2 toc-link" data-title="CharacterCustomizer.cs">CharacterCustomizer.cs</a>
+                  </li>
+                  <li>
+                    <a href="#cosmeticitemdata-cs" class="toc-h2 toc-link" data-title="CosmeticItemData.cs">CosmeticItemData.cs</a>
+                  </li>
+                  <li>
+                    <a href="#cbs-configurator" class="toc-h2 toc-link" data-title="CBS Configurator">CBS Configurator</a>
+                  </li>
+                  <li>
+                    <a href="#main-menu-scene" class="toc-h2 toc-link" data-title="Main Menu Scene">Main Menu Scene</a>
+                  </li>
+                  <li>
+                    <a href="#how-to-test" class="toc-h2 toc-link" data-title="How to test">How to test</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
             <a href="#troubleshooting" class="toc-h1 toc-link" data-title="Troubleshooting">Troubleshooting</a>
           </li>
       </ul>
@@ -385,6 +405,100 @@
 <h2 id='canvas-in-game-scene'>Canvas in Game Scene</h2>
 <p>In the GameOverPanel gameobject, add a button and set the gameobject as inactive.
 Drag the Managers Gameobject into the new button&#39;s OnClick() and set the function to GameManager&gt;RestartButton.</p>
+<h1 id='cosmetics-with-cbs-inventory'>Cosmetics with CBS Inventory</h1>
+<p>This allows you to link the current SMST Cosmetic items to CBS Items and use CBS for the users cosmetics inventory.</p>
+<h2 id='charactercustomizer-cs'>CharacterCustomizer.cs</h2>
+<blockquote>
+<p>At the top of the script add these</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">using</span> <span class="nn">System.Linq</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">CBS</span><span class="p">;</span>
+</code></pre></div>
+<blockquote>
+<p>Add these references</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">CosmeticItemData</span><span class="p">&gt;</span> <span class="n">items</span><span class="p">;</span>
+<span class="k">public</span> <span class="n">CosmeticItemData</span><span class="p">[]</span> <span class="n">allCosmetics</span><span class="p">;</span>
+<span class="k">private</span> <span class="n">ICBSInventory</span> <span class="n">InventoryModule</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</code></pre></div>
+<blockquote>
+<p>Replace <em>SampleInventory.instance.items.Length</em> with</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="n">items</span><span class="p">.</span><span class="n">Count</span>
+</code></pre></div>
+<blockquote>
+<p>Ad also replace <em>SampleInventory.instance.items[i]</em> with</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+</code></pre></div>
+<blockquote>
+<p>At the beginning of void Start(), add these</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="n">InventoryModule</span> <span class="p">=</span> <span class="n">CBSModule</span><span class="p">.</span><span class="n">Get</span><span class="p">&lt;</span><span class="n">CBSInventory</span><span class="p">&gt;();</span>
+<span class="n">InventoryModule</span><span class="p">.</span><span class="nf">GetInventory</span><span class="p">(</span><span class="n">OnGetInventory</span><span class="p">);</span>
+</code></pre></div>
+<blockquote>
+<p>At the start of void Open(), add this</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">if</span> <span class="p">(</span><span class="n">curSlots</span><span class="p">.</span><span class="n">Count</span> <span class="p">&lt;</span> <span class="n">items</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">curSlots</span><span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">InventorySlot</span><span class="p">&gt;();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span><span class="p">&lt;</span> <span class="n">items</span><span class="p">.</span><span class="n">Count</span><span class="p">,</span> <span class="n">i</span><span class="p">++)</span>
+  <span class="p">{</span>
+    <span class="n">InventorySlot</span> <span class="n">s</span> <span class="p">=</span> <span class="nf">Instantiate</span><span class="p">(</span><span class="n">slotPrefab</span><span class="p">,</span> <span class="n">slotHandler</span><span class="p">);</span>
+    <span class="n">s</span><span class="p">.</span><span class="n">cc</span> <span class="p">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="n">curSlots</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="nf">RefreshSlots</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+<blockquote>
+<p>Then add this method</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">private</span> <span class="k">void</span> <span class="nf">OnGetInventory</span><span class="p">(</span><span class="n">GetInventoryResult</span> <span class="n">result</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">IsSuccess</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="kt">var</span> <span class="n">allItems</span> <span class="p">=</span> <span class="n">result</span><span class="p">.</span><span class="n">AllItems</span><span class="p">;</span>
+    <span class="k">foreach</span> <span class="p">(</span><span class="n">CBSInventoryItem</span> <span class="n">item</span> <span class="k">in</span> <span class="n">result</span><span class="p">.</span><span class="n">AllItems</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="k">foreach</span> <span class="p">(</span><span class="n">CosmeticItemData</span> <span class="n">i</span> <span class="k">in</span> <span class="n">allCosmetics</span><span class="p">)</span>
+      <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="p">.</span><span class="n">cbsItemID</span> <span class="p">==</span> <span class="n">item</span><span class="p">.</span><span class="n">ID</span><span class="p">)</span>
+        <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(!</span><span class="n">items</span><span class="p">.</span><span class="nf">Contains</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+          <span class="p">{</span>
+            <span class="kt">int</span> <span class="n">addLocation</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+            <span class="k">while</span> <span class="p">(</span><span class="n">addLocation</span> <span class="p">&lt;</span> <span class="n">items</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span>
+            <span class="p">{</span>
+              <span class="n">addLocation</span><span class="p">++;</span>
+            <span class="p">}</span>
+            <span class="n">items</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+            <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"Found item from CBS ID; "</span> <span class="p">+</span> <span class="n">item</span><span class="p">.</span><span class="n">ID</span> <span class="p">+</span> <span class="s">" which mathces item "</span> <span class="p">+</span> <span class="n">i</span><span class="p">.</span><span class="n">name</span><span class="p">);</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>In this script we are chaging where we get the list of SMST Cosmetic Items, creating a new list which will be what the cosmetics window uses to populate and then comparing to Cosmetic Items available against the items the player has in their CBS Inventory and add it to our new list</p>
+<h2 id='cosmeticitemdata-cs'>CosmeticItemData.cs</h2>
+<blockquote>
+<p>Add this variable</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="kt">string</span> <span class="n">cbsItemID</span><span class="p">;</span>
+</code></pre></div>
+<p>Here we are just adding a reference to the cosmetic items counterpart in the CBS Items. This item id will be what we set the CBS Item ID as. So give each of your Cosmetic Items a memorable ID like &quot;hat1&quot;</p>
+<h2 id='cbs-configurator'>CBS Configurator</h2><div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="c1">// no code on this section</span>
+</code></pre></div>
+<p>In the Configurator, go to Items and create a new item to match one of your current SMST Cosmetics, and make sure to set the Item ID then same as what you added as the items cbsItemID.</p>
+<h2 id='main-menu-scene'>Main Menu Scene</h2><div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="c1">// no code in this section</span>
+</code></pre></div>
+<p>On the <em>Managers</em> GameObject, add all your SMST cosmetics to the CharacterCustomizer component under the <em>All Items</em> list. Also make sure you items are still updated in the <em>ItemLibrary</em> GameObject as per normal when creating new SMST Cosmetics.</p>
+<h2 id='how-to-test'>How to test</h2><div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="c1">// no code in this section</span>
+</code></pre></div>
+<p>If you wish to test this out, you can go to your PlayFab Dashboard, find your player and go to Inventory. You can then grant your player an item, run the game and open up your cosmetics page and you should now see the items you own with CBS.</p>
 <h1 id='troubleshooting'>Troubleshooting</h1>
 <aside class="notice">
 If you have any issues please feel free to contact me in the support Discords for the covered assets or emailing puppygamingdev@gmail.com

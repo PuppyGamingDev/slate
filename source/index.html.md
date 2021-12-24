@@ -201,3 +201,94 @@ On the *Managers* GameObject, add all your SMST cosmetics to the CharacterCustom
 ```
 
 If you wish to test this out, you can go to your PlayFab Dashboard, find your player and go to Inventory. You can then grant your player an item, run the game and open up your cosmetics page and you should now see the items you own with CBS.
+
+# Line Render while aiming joystick
+
+This will only work while using mobile joysticks and will display a line from the player in the aiming direction
+
+## PlayerController.cs
+
+> Add these references 
+
+```csharp
+public GameObject lineStart;
+public GameObject lineExit;
+```
+
+> In *void Update()* directly underneath where it says *HandleInputs();* add this
+
+```csharp
+if (gm.controlsManager.shootStick.isHolding)
+{
+  LineRenderer lineRenderer = GetComponent<LineRenderer>();
+  lineRenderer.enabled = true;
+  lineRenderer.positionCount = 2;
+  lineRenderer.SetPosition(0, lineStart.transform.position);
+  lineRenderer.SetPosition(1, lineExit.transform.position);
+}
+else
+{
+  LineRenderer lineRenderer = GetComponent<LineRenderer>();
+  lineRenderer.enabled = false;
+}
+```
+Here we are stating that when we are holding the shooting joystick down, we are activation the Line Renderer component between the start and exit points that we are going to set.
+
+## Player Prefab
+
+```csharp
+// no code in this section
+```
+
+Add a Line Renderer component to your Player prefab and untick it so by default it will be inactive then inside the WeaponHandler Gameobject, add 2 empty gameobjects and call them LineStart & LineExit. Set the transform of LineStart to (0, 0, 0) and the transform of LineExit to (10, 0, 0). To edit the appearance you can tick the component to make it active again and change the component's Material, then when finished just make sure it's unticked again.
+
+# Shoot on Joystick release
+
+With this, it will shoot when you release the shooting joystick. This is handy for Sniper type weapons where you can hold it to aim and then release to shoot.
+
+## Joystick.cs
+
+> Add this reference
+
+```csharp
+public bool canShoot;
+```
+
+> In *OnPointerUp()* add
+
+```csharp
+canShoot = true;
+```
+This just to say that when we release the touch on the joystick, we are allowed to shoot.
+
+## ControlsManager.cs
+
+> Add this reference
+
+```csharp
+public bool canShootNow;
+```
+
+> In *LateUpdate()*, comment out the current part with *//* and add this below
+
+```csharp
+shoot = mobileControls ? canShootNow : Input.GetButton("Fire1");
+```
+
+> In *Update()* add this
+
+```csharp
+canShootNow = shootStick.canShoot;
+```
+
+We are just modifying the current 'shoot' bool which the PlayerController script will use for shooting.
+
+## PlayerController.cs
+
+> In *public void Shoot()*, add this at the end
+
+```csharp
+GameManager.instance.controlsManager.shootStick.canShoot = false;
+```
+
+This is setting the canShoot bool back to false after we have taken a shot, otherwise we would continiously shoot after we release the joystick.

@@ -21,7 +21,7 @@ meta:
 
 # Introduction
 
-Welcome to the modifications documentation for Super Multiplayer Shooter Template. I am hoping to hold all the code snippets and written guide for modifications in my videos and also for some more bespoke modifications I have made.
+Welcome to the modifications documentation for Super Multiplayer Shooter Template. I am hoping to hold all the code snippets and written guide for modifications in my videos and also for some more bespoke modifications I have made. I also go through some of these modifications in my <a href='https://youtube.com/playlist?list=PLic6mrfW6bq6zmv83T0aaXMnogH9oJild'>YouTube playlist</a> if you find it easier go along with a video
 
 # Host Can Restart Game
 

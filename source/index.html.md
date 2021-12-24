@@ -29,19 +29,13 @@ This is a very simple modification to enable the game's host to restart the game
 
 ## GameManager.cs
 
-### References
-
-> References
+> Add this reference
 
 ```csharp
 public GameObject restartButton;
 ```
 
-Add this GameObject reference to the script.
-
-### void Start()
-
-> void Start
+> Add this to void Start()
 
 ```csharp
 if (PhotonNetwork.IsMasterClient)
@@ -50,21 +44,13 @@ if (PhotonNetwork.IsMasterClient)
 }
 ```
 
-In void Start(), add this
-
-### void Awake()
-
-> void Awake
+> Add this to void Awake()
 
 ```csharp
 PhotonNetwork.AutomaticallySyncScene = true;
 ```
 
-In void Awake(), add this
-
-### Add restart methods
-
-> Restart methods
+> Add these Restart methods
 
 ```csharp
 public void RestartButton()
@@ -85,10 +71,10 @@ void Restart()
   PhotonNetwork.LoadLevel("Game");
 }
 ```
-
-Add these methodsand save the script
+This is the only script that needs editing for this modification.
 
 ## Canvas in Game Scene
 
 In the GameOverPanel gameobject, add a button and set the gameobject as inactive.
 Drag the Managers Gameobject into the new button's OnClick() and set the function to GameManager>RestartButton.
+

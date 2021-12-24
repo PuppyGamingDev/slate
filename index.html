@@ -341,33 +341,27 @@
 <p>Welcome to the modifications documentation for Super Multiplayer Shooter Template. I am hoping to hold all the code snippets and written guide for modifications in my videos and also for some more bespoke modifications I have made.</p>
 <h1 id='host-can-restart-game'>Host Can Restart Game</h1>
 <p>This is a very simple modification to enable the game&#39;s host to restart the game once it&#39;s finished to avoid going back to the Lobby.</p>
-<h2 id='gamemanager-cs'>GameManager.cs</h2><h3 id='references'>References</h3>
+<h2 id='gamemanager-cs'>GameManager.cs</h2>
 <blockquote>
-<p>References</p>
+<p>Add this reference</p>
 </blockquote>
 <div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="n">GameObject</span> <span class="n">restartButton</span><span class="p">;</span>
 </code></pre></div>
-<p>Add this GameObject reference to the script.</p>
-<h3 id='void-start'>void Start()</h3>
 <blockquote>
-<p>void Start</p>
+<p>Add this to void Start()</p>
 </blockquote>
 <div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">if</span> <span class="p">(</span><span class="n">PhotonNetwork</span><span class="p">.</span><span class="n">IsMasterClient</span><span class="p">)</span>
 <span class="p">{</span>
   <span class="n">restart</span><span class="p">.</span><span class="n">Button</span><span class="p">.</span><span class="nf">SetActive</span><span class="p">(</span><span class="k">true</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>In void Start(), add this</p>
-<h3 id='void-awake'>void Awake()</h3>
 <blockquote>
-<p>void Awake</p>
+<p>Add this to void Awake()</p>
 </blockquote>
 <div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="n">PhotonNetwork</span><span class="p">.</span><span class="n">AutomaticallySyncScene</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
 </code></pre></div>
-<p>In void Awake(), add this</p>
-<h3 id='add-restart-methods'>Add restart methods</h3>
 <blockquote>
-<p>Restart methods</p>
+<p>Add these Restart methods</p>
 </blockquote>
 <div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="k">void</span> <span class="nf">RestartButton</span><span class="p">()</span>
 <span class="p">{</span>
@@ -387,7 +381,7 @@
   <span class="n">PhotonNetwork</span><span class="p">.</span><span class="nf">LoadLevel</span><span class="p">(</span><span class="s">"Game"</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>Add these methodsand save the script</p>
+<p>This is the only script that needs editing for this modification.</p>
 <h2 id='canvas-in-game-scene'>Canvas in Game Scene</h2>
 <p>In the GameOverPanel gameobject, add a button and set the gameobject as inactive.
 Drag the Managers Gameobject into the new button&#39;s OnClick() and set the function to GameManager&gt;RestartButton.</p>

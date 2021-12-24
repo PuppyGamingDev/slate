@@ -347,6 +347,31 @@
               </ul>
           </li>
           <li>
+            <a href="#line-render-while-aiming-joystick" class="toc-h1 toc-link" data-title="Line Render while aiming joystick">Line Render while aiming joystick</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#playercontroller-cs" class="toc-h2 toc-link" data-title="PlayerController.cs">PlayerController.cs</a>
+                  </li>
+                  <li>
+                    <a href="#player-prefab" class="toc-h2 toc-link" data-title="Player Prefab">Player Prefab</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#shoot-on-joystick-release" class="toc-h1 toc-link" data-title="Shoot on Joystick release">Shoot on Joystick release</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#joystick-cs" class="toc-h2 toc-link" data-title="Joystick.cs">Joystick.cs</a>
+                  </li>
+                  <li>
+                    <a href="#controlsmanager-cs" class="toc-h2 toc-link" data-title="ControlsManager.cs">ControlsManager.cs</a>
+                  </li>
+                  <li>
+                    <a href="#playercontroller-cs-2" class="toc-h2 toc-link" data-title="PlayerController.cs">PlayerController.cs</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
             <a href="#troubleshooting" class="toc-h1 toc-link" data-title="Troubleshooting">Troubleshooting</a>
           </li>
       </ul>
@@ -499,6 +524,74 @@ Drag the Managers Gameobject into the new button&#39;s OnClick() and set the fun
 <h2 id='how-to-test'>How to test</h2><div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="c1">// no code in this section</span>
 </code></pre></div>
 <p>If you wish to test this out, you can go to your PlayFab Dashboard, find your player and go to Inventory. You can then grant your player an item, run the game and open up your cosmetics page and you should now see the items you own with CBS.</p>
+<h1 id='line-render-while-aiming-joystick'>Line Render while aiming joystick</h1>
+<p>This will only work while using mobile joysticks and will display a line from the player in the aiming direction</p>
+<h2 id='playercontroller-cs'>PlayerController.cs</h2>
+<blockquote>
+<p>Add these references </p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="n">GameObject</span> <span class="n">lineStart</span><span class="p">;</span>
+<span class="k">public</span> <span class="n">GameObject</span> <span class="n">lineExit</span><span class="p">;</span>
+</code></pre></div>
+<blockquote>
+<p>In <em>void Update()</em> directly underneath where it says <em>HandleInputs();</em> add this</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">if</span> <span class="p">(</span><span class="n">gm</span><span class="p">.</span><span class="n">controlsManager</span><span class="p">.</span><span class="n">shootStick</span><span class="p">.</span><span class="n">isHolding</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">LineRenderer</span> <span class="n">lineRenderer</span> <span class="p">=</span> <span class="n">GetComponent</span><span class="p">&lt;</span><span class="n">LineRenderer</span><span class="p">&gt;();</span>
+  <span class="n">lineRenderer</span><span class="p">.</span><span class="n">enabled</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+  <span class="n">lineRenderer</span><span class="p">.</span><span class="n">positionCount</span> <span class="p">=</span> <span class="m">2</span><span class="p">;</span>
+  <span class="n">lineRenderer</span><span class="p">.</span><span class="nf">SetPosition</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">lineStart</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">);</span>
+  <span class="n">lineRenderer</span><span class="p">.</span><span class="nf">SetPosition</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="n">lineExit</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">else</span>
+<span class="p">{</span>
+  <span class="n">LineRenderer</span> <span class="n">lineRenderer</span> <span class="p">=</span> <span class="n">GetComponent</span><span class="p">&lt;</span><span class="n">LineRenderer</span><span class="p">&gt;();</span>
+  <span class="n">lineRenderer</span><span class="p">.</span><span class="n">enabled</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Here we are stating that when we are holding the shooting joystick down, we are activation the Line Renderer component between the start and exit points that we are going to set.</p>
+<h2 id='player-prefab'>Player Prefab</h2><div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="c1">// no code in this section</span>
+</code></pre></div>
+<p>Add a Line Renderer component to your Player prefab and untick it so by default it will be inactive then inside the WeaponHandler Gameobject, add 2 empty gameobjects and call them LineStart &amp; LineExit. Set the transform of LineStart to (0, 0, 0) and the transform of LineExit to (10, 0, 0). To edit the appearance you can tick the component to make it active again and change the component&#39;s Material, then when finished just make sure it&#39;s unticked again.</p>
+<h1 id='shoot-on-joystick-release'>Shoot on Joystick release</h1>
+<p>With this, it will shoot when you release the shooting joystick. This is handy for Sniper type weapons where you can hold it to aim and then release to shoot.</p>
+<h2 id='joystick-cs'>Joystick.cs</h2>
+<blockquote>
+<p>Add this reference</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="kt">bool</span> <span class="n">canShoot</span><span class="p">;</span>
+</code></pre></div>
+<blockquote>
+<p>In <em>OnPointerUp()</em> add</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="n">canShoot</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+</code></pre></div>
+<p>This just to say that when we release the touch on the joystick, we are allowed to shoot.</p>
+<h2 id='controlsmanager-cs'>ControlsManager.cs</h2>
+<blockquote>
+<p>Add this reference</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="kt">bool</span> <span class="n">canShootNow</span><span class="p">;</span>
+</code></pre></div>
+<blockquote>
+<p>In <em>LateUpdate()</em>, comment out the current part with <em>//</em> and add this below</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="n">shoot</span> <span class="p">=</span> <span class="n">mobileControls</span> <span class="p">?</span> <span class="n">canShootNow</span> <span class="p">:</span> <span class="n">Input</span><span class="p">.</span><span class="nf">GetButton</span><span class="p">(</span><span class="s">"Fire1"</span><span class="p">);</span>
+</code></pre></div>
+<blockquote>
+<p>In <em>Update()</em> add this</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="n">canShootNow</span> <span class="p">=</span> <span class="n">shootStick</span><span class="p">.</span><span class="n">canShoot</span><span class="p">;</span>
+</code></pre></div>
+<p>We are just modifying the current &#39;shoot&#39; bool which the PlayerController script will use for shooting.</p>
+<h2 id='playercontroller-cs-2'>PlayerController.cs</h2>
+<blockquote>
+<p>In <em>public void Shoot()</em>, add this at the end</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="n">GameManager</span><span class="p">.</span><span class="n">instance</span><span class="p">.</span><span class="n">controlsManager</span><span class="p">.</span><span class="n">shootStick</span><span class="p">.</span><span class="n">canShoot</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+</code></pre></div>
+<p>This is setting the canShoot bool back to false after we have taken a shot, otherwise we would continiously shoot after we release the joystick.</p>
 <h1 id='troubleshooting'>Troubleshooting</h1>
 <aside class="notice">
 If you have any issues please feel free to contact me in the support Discords for the covered assets or emailing puppygamingdev@gmail.com

@@ -372,6 +372,17 @@
               </ul>
           </li>
           <li>
+            <a href="#game-search-filter" class="toc-h1 toc-link" data-title="Game Search Filter">Game Search Filter</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#lobbybrowserui-cs" class="toc-h2 toc-link" data-title="LobbyBrowserUI.cs">LobbyBrowserUI.cs</a>
+                  </li>
+                  <li>
+                    <a href="#mainmenu-scene" class="toc-h2 toc-link" data-title="MainMenu scene">MainMenu scene</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
             <a href="#troubleshooting" class="toc-h1 toc-link" data-title="Troubleshooting">Troubleshooting</a>
           </li>
       </ul>
@@ -594,6 +605,26 @@ Drag the Managers Gameobject into the new button&#39;s OnClick() and set the fun
 <div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="n">GameManager</span><span class="p">.</span><span class="n">instance</span><span class="p">.</span><span class="n">controlsManager</span><span class="p">.</span><span class="n">shootStick</span><span class="p">.</span><span class="n">canShoot</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
 </code></pre></div>
 <p>This is setting the canShoot bool back to false after we have taken a shot, otherwise we would continiously shoot after we release the joystick.</p>
+<h1 id='game-search-filter'>Game Search Filter</h1>
+<p>This is a simple addition to be able to search through the available Lobbys using the hosts name which is also used as the game&#39;s name. For now this is Case Sensitive when searching, I aim to modify this again.</p>
+<h2 id='lobbybrowserui-cs'>LobbyBrowserUI.cs</h2>
+<blockquote>
+<p>Add these references</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="n">InputField</span> <span class="n">searchField</span><span class="p">;</span>
+</code></pre></div>
+<blockquote>
+<p>Directly after <em>r.Set(Connector.instance.rooms[i], this);</em> in <em>RefreshBrowser()</em> insert this on the next line</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">if</span> <span class="p">(</span><span class="n">searchField</span><span class="p">.</span><span class="n">text</span> <span class="p">!=</span> <span class="s">""</span> <span class="p">&amp;&amp;</span> <span class="n">r</span><span class="p">.</span><span class="n">nameText</span><span class="p">.</span><span class="n">text</span> <span class="p">!=</span> <span class="n">searchField</span><span class="p">.</span><span class="n">text</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">r</span><span class="p">.</span><span class="n">gameObject</span><span class="p">.</span><span class="nf">SetActive</span><span class="p">(</span><span class="k">false</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>This is the basic function edit that will, if there is any text in the search field, remove any games from the list that do not match the typed name.</p>
+<h2 id='mainmenu-scene'>MainMenu scene</h2><div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="c1">// No code in this section</span>
+</code></pre></div>
+<p>In the MainMenu scene under Canvas&gt;LobbyBrowserPanel create a new Button and InputField. For the Button&#39;s OnClick() function drag the <em>Managers</em> GameObject to it and use the <em>LobbyBrowserUI &gt; RefreshBrowser</em> function. Then on the <em>Managers</em> GameObject, under the LobbyBrowserUI component, drag the InputField to the new InputField value we created.</p>
 <h1 id='troubleshooting'>Troubleshooting</h1>
 <aside class="notice">
 If you have any issues please feel free to contact me in the support Discords for the covered assets or emailing puppygamingdev@gmail.com

@@ -293,3 +293,35 @@ GameManager.instance.controlsManager.shootStick.canShoot = false;
 ```
 
 This is setting the canShoot bool back to false after we have taken a shot, otherwise we would continiously shoot after we release the joystick.
+
+# Game Search Filter
+
+This is a simple addition to be able to search through the available Lobbys using the hosts name which is also used as the game's name. For now this is Case Sensitive when searching, I aim to modify this again.
+
+## LobbyBrowserUI.cs
+
+> Add these references
+
+```csharp
+public InputField searchField;
+```
+
+> Directly after *r.Set(Connector.instance.rooms[i], this);* in *RefreshBrowser()* insert this on the next line
+
+```csharp
+if (searchField.text != "" && r.nameText.text != searchField.text)
+{
+  r.gameObject.SetActive(false);
+}
+```
+
+This is the basic function edit that will, if there is any text in the search field, remove any games from the list that do not match the typed name.
+
+## MainMenu scene
+
+```csharp
+// No code in this section
+```
+
+In the MainMenu scene under Canvas>LobbyBrowserPanel create a new Button and InputField. For the Button's OnClick() function drag the *Managers* GameObject to it and use the *LobbyBrowserUI > RefreshBrowser* function. Then on the *Managers* GameObject, under the LobbyBrowserUI component, drag the InputField to the new InputField value we created.
+

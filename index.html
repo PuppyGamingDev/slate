@@ -383,6 +383,17 @@
               </ul>
           </li>
           <li>
+            <a href="#change-server-region" class="toc-h1 toc-link" data-title="Change Server Region">Change Server Region</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#connector-cs" class="toc-h2 toc-link" data-title="Connector.cs">Connector.cs</a>
+                  </li>
+                  <li>
+                    <a href="#main-menu-scene-2" class="toc-h2 toc-link" data-title="Main Menu Scene">Main Menu Scene</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
             <a href="#troubleshooting" class="toc-h1 toc-link" data-title="Troubleshooting">Troubleshooting</a>
           </li>
       </ul>
@@ -625,6 +636,22 @@ Drag the Managers Gameobject into the new button&#39;s OnClick() and set the fun
 <h2 id='mainmenu-scene'>MainMenu scene</h2><div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="c1">// No code in this section</span>
 </code></pre></div>
 <p>In the MainMenu scene under Canvas&gt;LobbyBrowserPanel create a new Button and InputField. For the Button&#39;s OnClick() function drag the <em>Managers</em> GameObject to it and use the <em>LobbyBrowserUI &gt; RefreshBrowser</em> function. Then on the <em>Managers</em> GameObject, under the LobbyBrowserUI component, drag the InputField to the new InputField value we created.</p>
+<h1 id='change-server-region'>Change Server Region</h1>
+<p>This simple edit will allow the user to change their server region from in-game</p>
+<h2 id='connector-cs'>Connector.cs</h2>
+<blockquote>
+<p>Add this function</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="k">void</span> <span class="nf">CustomServer</span><span class="p">(</span><span class="kt">string</span> <span class="n">newServer</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">PhotonNetwork</span><span class="p">.</span><span class="n">PhotonServerSettings</span><span class="p">.</span><span class="n">AppSettings</span><span class="p">.</span><span class="n">FixedRegion</span> <span class="p">=</span> <span class="n">newServer</span><span class="p">;</span>
+    <span class="n">PhotonNetwork</span><span class="p">.</span><span class="nf">Disconnect</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>All it takes is a simple function that takes the users chosen server region code and swaps out the currently selected Photon FixedRegion then disconnected from Photon, the reconnect funtion will then auto reconnect to photon with the new region code.</p>
+<h2 id='main-menu-scene-2'>Main Menu Scene</h2><div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="c1">// No code in this section</span>
+</code></pre></div>
+<p>Add the buttons wherever you want, probably in a panel that pops up or an options panel. Give the buttons an OnClick and drag over the <em>Managers</em> GameObject to it. Select the function as <em>Connector&gt;CustomServer()</em> and the <em>string</em> value for each button will be the server code that button represents. These are available at https://doc.photonengine.com/zh-cn/pun/current/connection-and-authentication/regions</p>
 <h1 id='troubleshooting'>Troubleshooting</h1>
 <aside class="notice">
 If you have any issues please feel free to contact me in the support Discords for the covered assets or emailing puppygamingdev@gmail.com

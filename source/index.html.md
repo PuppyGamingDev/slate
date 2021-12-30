@@ -331,17 +331,38 @@ This simple edit will allow the user to change their server region from in-game
 
 ## Connector.cs
 
+> Add this reference
+
+```csharp
+public Dropdown serverList;
+```
+
 > Add this function
 
 ```csharp
-public void CustomServer(string newServer)
+public void CustomServer()
 {
-    PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = newServer;
-    PhotonNetwork.Disconnect();
+  var serverChoice = serverList.value;
+  ServerList newServer = (ServerList)serverChoice;
+  PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = newServer.ToString();
+  PhotonNetwork.Disconnect();
 }
 ```
 
-All it takes is a simple function that takes the users chosen server region code and swaps out the currently selected Photon FixedRegion then disconnected from Photon, the reconnect funtion will then auto reconnect to photon with the new region code.
+> At the end of the script after the last *}* add this enum and replace or reorder them as you like using Photon Server Region Codes (Link in central section of page)
+
+```csharp
+public enum ServerList
+{
+    eu = 0,
+    us = 1,
+    asia = 2,
+    ru = 3,
+    za = 4
+}
+```
+
+All it takes is a simple function that takes the users chosen server region code from the Dropdown choices number, grabs the region code by using the enum we add at the end and then sets that as our chosen server, then uses the already in place Reconnect function to reconnect to Photon using our new choice. https://doc.photonengine.com/zh-cn/pun/current/connection-and-authentication/regions
 
 ## Main Menu Scene
 
@@ -349,4 +370,4 @@ All it takes is a simple function that takes the users chosen server region code
 // No code in this section
 ```
 
-Add the buttons wherever you want, probably in a panel that pops up or an options panel. Give the buttons an OnClick and drag over the *Managers* GameObject to it. Select the function as *Connector>CustomServer()* and the *string* value for each button will be the server code that button represents. These are available at https://doc.photonengine.com/zh-cn/pun/current/connection-and-authentication/regions
+Add a new Dropbdown box where you want and for each server you added to the *ServerList* enum, add them to the dropdown options, in the exact same order. Then drag the *Managers* GameObject to the Dropdown's *On Value Changed* and use *Connector > CustomServer()*. Now give it a try!

@@ -325,3 +325,28 @@ This is the basic function edit that will, if there is any text in the search fi
 
 In the MainMenu scene under Canvas>LobbyBrowserPanel create a new Button and InputField. For the Button's OnClick() function drag the *Managers* GameObject to it and use the *LobbyBrowserUI > RefreshBrowser* function. Then on the *Managers* GameObject, under the LobbyBrowserUI component, drag the InputField to the new InputField value we created.
 
+# Change Server Region
+
+This simple edit will allow the user to change their server region from in-game
+
+## Connector.cs
+
+> Add this function
+
+```csharp
+public void CustomServer(string newServer)
+{
+    PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = newServer;
+    PhotonNetwork.Disconnect();
+}
+```
+
+All it takes is a simple function that takes the users chosen server region code and swaps out the currently selected Photon FixedRegion then disconnected from Photon, the reconnect funtion will then auto reconnect to photon with the new region code.
+
+## Main Menu Scene
+
+```csharp
+// No code in this section
+```
+
+Add the buttons wherever you want, probably in a panel that pops up or an options panel. Give the buttons an OnClick and drag over the *Managers* GameObject to it. Select the function as *Connector>CustomServer()* and the *string* value for each button will be the server code that button represents. These are available at https://doc.photonengine.com/zh-cn/pun/current/connection-and-authentication/regions

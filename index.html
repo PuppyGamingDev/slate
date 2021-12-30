@@ -640,18 +640,37 @@ Drag the Managers Gameobject into the new button&#39;s OnClick() and set the fun
 <p>This simple edit will allow the user to change their server region from in-game</p>
 <h2 id='connector-cs'>Connector.cs</h2>
 <blockquote>
+<p>Add this reference</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="n">Dropdown</span> <span class="n">serverList</span><span class="p">;</span>
+</code></pre></div>
+<blockquote>
 <p>Add this function</p>
 </blockquote>
-<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="k">void</span> <span class="nf">CustomServer</span><span class="p">(</span><span class="kt">string</span> <span class="n">newServer</span><span class="p">)</span>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="k">void</span> <span class="nf">CustomServer</span><span class="p">()</span>
 <span class="p">{</span>
-    <span class="n">PhotonNetwork</span><span class="p">.</span><span class="n">PhotonServerSettings</span><span class="p">.</span><span class="n">AppSettings</span><span class="p">.</span><span class="n">FixedRegion</span> <span class="p">=</span> <span class="n">newServer</span><span class="p">;</span>
-    <span class="n">PhotonNetwork</span><span class="p">.</span><span class="nf">Disconnect</span><span class="p">();</span>
+  <span class="kt">var</span> <span class="n">serverChoice</span> <span class="p">=</span> <span class="n">serverList</span><span class="p">.</span><span class="k">value</span><span class="p">;</span>
+  <span class="n">ServerList</span> <span class="n">newServer</span> <span class="p">=</span> <span class="p">(</span><span class="n">ServerList</span><span class="p">)</span><span class="n">serverChoice</span><span class="p">;</span>
+  <span class="n">PhotonNetwork</span><span class="p">.</span><span class="n">PhotonServerSettings</span><span class="p">.</span><span class="n">AppSettings</span><span class="p">.</span><span class="n">FixedRegion</span> <span class="p">=</span> <span class="n">newServer</span><span class="p">.</span><span class="nf">ToString</span><span class="p">();</span>
+  <span class="n">PhotonNetwork</span><span class="p">.</span><span class="nf">Disconnect</span><span class="p">();</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>All it takes is a simple function that takes the users chosen server region code and swaps out the currently selected Photon FixedRegion then disconnected from Photon, the reconnect funtion will then auto reconnect to photon with the new region code.</p>
+<blockquote>
+<p>At the end of the script after the last <em>}</em> add this enum and replace or reorder them as you like using Photon Server Region Codes (Link in central section of page)</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="k">enum</span> <span class="n">ServerList</span>
+<span class="p">{</span>
+    <span class="n">eu</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
+    <span class="n">us</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+    <span class="n">asia</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+    <span class="n">ru</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
+    <span class="n">za</span> <span class="p">=</span> <span class="m">4</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>All it takes is a simple function that takes the users chosen server region code from the Dropdown choices number, grabs the region code by using the enum we add at the end and then sets that as our chosen server, then uses the already in place Reconnect function to reconnect to Photon using our new choice. https://doc.photonengine.com/zh-cn/pun/current/connection-and-authentication/regions</p>
 <h2 id='main-menu-scene-2'>Main Menu Scene</h2><div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="c1">// No code in this section</span>
 </code></pre></div>
-<p>Add the buttons wherever you want, probably in a panel that pops up or an options panel. Give the buttons an OnClick and drag over the <em>Managers</em> GameObject to it. Select the function as <em>Connector&gt;CustomServer()</em> and the <em>string</em> value for each button will be the server code that button represents. These are available at https://doc.photonengine.com/zh-cn/pun/current/connection-and-authentication/regions</p>
+<p>Add a new Dropbdown box where you want and for each server you added to the <em>ServerList</em> enum, add them to the dropdown options, in the exact same order. Then drag the <em>Managers</em> GameObject to the Dropdown&#39;s <em>On Value Changed</em> and use <em>Connector &gt; CustomServer()</em>. Now give it a try!</p>
 <h1 id='troubleshooting'>Troubleshooting</h1>
 <aside class="notice">
 If you have any issues please feel free to contact me in the support Discords for the covered assets or emailing puppygamingdev@gmail.com

@@ -331,6 +331,12 @@ This simple edit will allow the user to change their server region from in-game
 
 ## Connector.cs
 
+> At the top add this
+
+```csharp
+using UnityEngine.UI;
+```
+
 > Add this reference
 
 ```csharp
@@ -371,3 +377,74 @@ All it takes is a simple function that takes the users chosen server region code
 ```
 
 Add a new Dropbdown box where you want and for each server you added to the *ServerList* enum, add them to the dropdown options, in the exact same order. Then drag the *Managers* GameObject to the Dropdown's *On Value Changed* and use *Connector > CustomServer()*. Now give it a try!
+
+# Google Login with CBS
+
+You will need to have the GooglePlayGames SDK imported and this still contains a bug (at least for me anyways) where I click the button and it logs me into Google Play but then I have to press again for it to go to the MainMenu Scene.
+
+## LoginForm.cs
+
+> Add these to the top of the Script
+
+```csharp
+using GooglePlayGames;
+using GooglePlayGames.BasicApi;
+```
+
+> Add this to Start()
+
+```csharp
+PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
+.AddOauthScope("profile")
+.RequestServerAuthCode(false)
+.Build();
+PlayGamesPlatform.InitializeInstance(config);
+
+// recommended for debugging:
+PlayGamesPlatform.DebugLogEnabled = true;
+
+// Activate the Google Play Games platform
+PlayGamesPlatform.Activate();
+```
+
+> Add these functions
+
+```csharp
+public void OnLoginWithGoogle()
+{
+  new PopupViewer().ShowLoadingPopup();
+  string serverAuthCode = PlayGamesPlatform.Instance.GetServerAuthCode();
+  Auth.LoginWithGoolge(serverAuthCode, OnGoogleUserLogin);
+}
+
+private void OnGoogleUserLogin(CBSLoginResult result)
+{
+
+  Social.localUser.Authenticate((bool success) => {
+
+  Debug.Log("Google Signed In");
+  var serverAuthCode = PlayGamesPlatform.Instance.GetServerAuthCode();
+  Debug.Log("Auth Code: " + serverAuthCode);
+  new PopupViewer().HideLoadingPopup();
+
+  if (result.IsSuccess)
+  {
+  // goto main screen
+    gameObject.SetActive(false);
+    OnLogined?.Invoke(result);
+    Debug.Log(string.Format("User with ID {0} successfully log in", result.PlayerId));
+  }
+  });
+}
+```
+
+This is essentially the Code to activate the Play Games Platform and how to login.
+
+## Login Scene
+
+```csharp
+// No code in this section
+```
+
+Add you new button and give the *OnClick* the new *OnLoginWithGoogle* function from LoginForm.cs
+

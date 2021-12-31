@@ -394,6 +394,17 @@
               </ul>
           </li>
           <li>
+            <a href="#google-login-with-cbs" class="toc-h1 toc-link" data-title="Google Login with CBS">Google Login with CBS</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#loginform-cs" class="toc-h2 toc-link" data-title="LoginForm.cs">LoginForm.cs</a>
+                  </li>
+                  <li>
+                    <a href="#login-scene" class="toc-h2 toc-link" data-title="Login Scene">Login Scene</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
             <a href="#troubleshooting" class="toc-h1 toc-link" data-title="Troubleshooting">Troubleshooting</a>
           </li>
       </ul>
@@ -640,6 +651,11 @@ Drag the Managers Gameobject into the new button&#39;s OnClick() and set the fun
 <p>This simple edit will allow the user to change their server region from in-game</p>
 <h2 id='connector-cs'>Connector.cs</h2>
 <blockquote>
+<p>At the top add this</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">using</span> <span class="nn">UnityEngine.UI</span><span class="p">;</span>
+</code></pre></div>
+<blockquote>
 <p>Add this reference</p>
 </blockquote>
 <div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="n">Dropdown</span> <span class="n">serverList</span><span class="p">;</span>
@@ -671,6 +687,64 @@ Drag the Managers Gameobject into the new button&#39;s OnClick() and set the fun
 <h2 id='main-menu-scene-2'>Main Menu Scene</h2><div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="c1">// No code in this section</span>
 </code></pre></div>
 <p>Add a new Dropbdown box where you want and for each server you added to the <em>ServerList</em> enum, add them to the dropdown options, in the exact same order. Then drag the <em>Managers</em> GameObject to the Dropdown&#39;s <em>On Value Changed</em> and use <em>Connector &gt; CustomServer()</em>. Now give it a try!</p>
+<h1 id='google-login-with-cbs'>Google Login with CBS</h1>
+<p>You will need to have the GooglePlayGames SDK imported and this still contains a bug (at least for me anyways) where I click the button and it logs me into Google Play but then I have to press again for it to go to the MainMenu Scene.</p>
+<h2 id='loginform-cs'>LoginForm.cs</h2>
+<blockquote>
+<p>Add these to the top of the Script</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">using</span> <span class="nn">GooglePlayGames</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">GooglePlayGames.BasicApi</span><span class="p">;</span>
+</code></pre></div>
+<blockquote>
+<p>Add this to Start()</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="n">PlayGamesClientConfiguration</span> <span class="n">config</span> <span class="p">=</span> <span class="k">new</span> <span class="n">PlayGamesClientConfiguration</span><span class="p">.</span><span class="nf">Builder</span><span class="p">()</span>
+<span class="p">.</span><span class="nf">AddOauthScope</span><span class="p">(</span><span class="s">"profile"</span><span class="p">)</span>
+<span class="p">.</span><span class="nf">RequestServerAuthCode</span><span class="p">(</span><span class="k">false</span><span class="p">)</span>
+<span class="p">.</span><span class="nf">Build</span><span class="p">();</span>
+<span class="n">PlayGamesPlatform</span><span class="p">.</span><span class="nf">InitializeInstance</span><span class="p">(</span><span class="n">config</span><span class="p">);</span>
+
+<span class="c1">// recommended for debugging:</span>
+<span class="n">PlayGamesPlatform</span><span class="p">.</span><span class="n">DebugLogEnabled</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+
+<span class="c1">// Activate the Google Play Games platform</span>
+<span class="n">PlayGamesPlatform</span><span class="p">.</span><span class="nf">Activate</span><span class="p">();</span>
+</code></pre></div>
+<blockquote>
+<p>Add these functions</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="k">void</span> <span class="nf">OnLoginWithGoogle</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="k">new</span> <span class="nf">PopupViewer</span><span class="p">().</span><span class="nf">ShowLoadingPopup</span><span class="p">();</span>
+  <span class="kt">string</span> <span class="n">serverAuthCode</span> <span class="p">=</span> <span class="n">PlayGamesPlatform</span><span class="p">.</span><span class="n">Instance</span><span class="p">.</span><span class="nf">GetServerAuthCode</span><span class="p">();</span>
+  <span class="n">Auth</span><span class="p">.</span><span class="nf">LoginWithGoolge</span><span class="p">(</span><span class="n">serverAuthCode</span><span class="p">,</span> <span class="n">OnGoogleUserLogin</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">private</span> <span class="k">void</span> <span class="nf">OnGoogleUserLogin</span><span class="p">(</span><span class="n">CBSLoginResult</span> <span class="n">result</span><span class="p">)</span>
+<span class="p">{</span>
+
+  <span class="n">Social</span><span class="p">.</span><span class="n">localUser</span><span class="p">.</span><span class="nf">Authenticate</span><span class="p">((</span><span class="kt">bool</span> <span class="n">success</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+
+  <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"Google Signed In"</span><span class="p">);</span>
+  <span class="kt">var</span> <span class="n">serverAuthCode</span> <span class="p">=</span> <span class="n">PlayGamesPlatform</span><span class="p">.</span><span class="n">Instance</span><span class="p">.</span><span class="nf">GetServerAuthCode</span><span class="p">();</span>
+  <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"Auth Code: "</span> <span class="p">+</span> <span class="n">serverAuthCode</span><span class="p">);</span>
+  <span class="k">new</span> <span class="nf">PopupViewer</span><span class="p">().</span><span class="nf">HideLoadingPopup</span><span class="p">();</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">IsSuccess</span><span class="p">)</span>
+  <span class="p">{</span>
+  <span class="c1">// goto main screen</span>
+    <span class="n">gameObject</span><span class="p">.</span><span class="nf">SetActive</span><span class="p">(</span><span class="k">false</span><span class="p">);</span>
+    <span class="n">OnLogined</span><span class="p">?.</span><span class="nf">Invoke</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+    <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="nf">Format</span><span class="p">(</span><span class="s">"User with ID {0} successfully log in"</span><span class="p">,</span> <span class="n">result</span><span class="p">.</span><span class="n">PlayerId</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>This is essentially the Code to activate the Play Games Platform and how to login.</p>
+<h2 id='login-scene'>Login Scene</h2><div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="c1">// No code in this section</span>
+</code></pre></div>
+<p>Add you new button and give the <em>OnClick</em> the new <em>OnLoginWithGoogle</em> function from LoginForm.cs</p>
 <h1 id='troubleshooting'>Troubleshooting</h1>
 <aside class="notice">
 If you have any issues please feel free to contact me in the support Discords for the covered assets or emailing puppygamingdev@gmail.com

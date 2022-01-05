@@ -376,7 +376,7 @@ All it takes is a simple function that takes the users chosen server region code
 // No code in this section
 ```
 
-Add a new Dropbdown box where you want and for each server you added to the *ServerList* enum, add them to the dropdown options, in the exact same order. Then drag the *Managers* GameObject to the Dropdown's *On Value Changed* and use *Connector > CustomServer()*. Now give it a try!
+Add a new Dropbdown box where you want and for each server you added to the *ServerList* enum, add them to the dropdown options, in the exact same order. Then drag the *Managers* GameObject to the Dropdown's *On Value Changed* and use *Connector > CustomServer()*. Finally, in the Connector component of the *Managers* GameObject, drag your Dropdown into the new Server List dropdown reference.
 
 # Google Login with CBS
 

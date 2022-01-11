@@ -448,3 +448,33 @@ This is essentially the Code to activate the Play Games Platform and how to logi
 
 Add you new button and give the *OnClick* the new *OnLoginWithGoogle* function from LoginForm.cs
 
+# Solana NFT owned Characters (In Progress)(WebGL)
+
+This is a work in progress on integrating the Phantom Wallet login to the WebGL page and passing the mint for each owned NFT to a script in Unity which will add all mint IDs to a list to be used for comparison against a mintID value each character will have. We will then only allow the characters with a matching mint ID to be usable. This could also be edited with the Cosmetic modification to use NFTs instead of CBS Items.
+
+## CharacterSelector.cs?
+
+> This will be our function that receives data from the web page with the NFT mints
+
+```csharp
+public void ReceiveTokens(string mint)
+{
+  foreach (Character c in allCharacters)
+  {
+    if (c.mintID == mint)
+    {
+      if (!characters.Contains(c))
+      {
+        int addLocation = 0;
+        while (addLocation < characters.Count)
+        {
+          addLocation++;
+        }
+        characters.Add(c);
+        Debug.Log("Found Character which matches Mint ID; "+ mint);
+      }
+    }
+}
+```
+
+This script should compare all characters from one list with the mint received from the web page and add it to a new list which we will use for selectable characters.

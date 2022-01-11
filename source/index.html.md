@@ -3,7 +3,6 @@ title: PuppyGaming Docs
 
 language_tabs: # must be one of https://git.io/vQNgJ
   - csharp
-  - html
 
 toc_footers:
   - <a href='https://portfolio.puppygaming.co.uk'>View my portfolio</a>
@@ -457,26 +456,26 @@ This is a work in progress on integrating the Phantom Wallet login to the WebGL 
 
 > Where you would like them, add some buttons for connecting wallet and loggin out of wallet using our functions
 
-```html
+```csharp
       <button onclick="getAccount()">Get Account</button>
       <button onclick="logoutAccount()">Logout</button>
 ```
 
 > At the start of the *Script* region add this var
 
-```html
+```csharp
 var webglPlayer;
 ```
 
 > Search for *.then((unityInstance) => {* and on the next line add this
 
-```html
+```csharp
 webglPlayer = unityInstance;
 ```
 
 > Add this after the Unity parts in the *<script>* before the *</script>*
 
-```html
+```csharp
       // Custom functions
       var wallet;
       var myKey;

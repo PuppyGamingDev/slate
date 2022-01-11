@@ -405,6 +405,14 @@
               </ul>
           </li>
           <li>
+            <a href="#solana-nft-owned-characters-in-progress-webgl" class="toc-h1 toc-link" data-title="Solana NFT owned Characters (In Progress)(WebGL)">Solana NFT owned Characters (In Progress)(WebGL)</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#characterselector-cs" class="toc-h2 toc-link" data-title="CharacterSelector.cs?">CharacterSelector.cs?</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
             <a href="#troubleshooting" class="toc-h1 toc-link" data-title="Troubleshooting">Troubleshooting</a>
           </li>
       </ul>
@@ -745,6 +753,32 @@ Drag the Managers Gameobject into the new button&#39;s OnClick() and set the fun
 <h2 id='login-scene'>Login Scene</h2><div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="c1">// No code in this section</span>
 </code></pre></div>
 <p>Add you new button and give the <em>OnClick</em> the new <em>OnLoginWithGoogle</em> function from LoginForm.cs</p>
+<h1 id='solana-nft-owned-characters-in-progress-webgl'>Solana NFT owned Characters (In Progress)(WebGL)</h1>
+<p>This is a work in progress on integrating the Phantom Wallet login to the WebGL page and passing the mint for each owned NFT to a script in Unity which will add all mint IDs to a list to be used for comparison against a mintID value each character will have. We will then only allow the characters with a matching mint ID to be usable. This could also be edited with the Cosmetic modification to use NFTs instead of CBS Items.</p>
+<h2 id='characterselector-cs'>CharacterSelector.cs?</h2>
+<blockquote>
+<p>This will be our function that receives data from the web page with the NFT mints</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="k">void</span> <span class="nf">ReceiveTokens</span><span class="p">(</span><span class="kt">string</span> <span class="n">mint</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">foreach</span> <span class="p">(</span><span class="n">Character</span> <span class="n">c</span> <span class="k">in</span> <span class="n">allCharacters</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="n">mintID</span> <span class="p">==</span> <span class="n">mint</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(!</span><span class="n">characters</span><span class="p">.</span><span class="nf">Contains</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+      <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">addLocation</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">addLocation</span> <span class="p">&lt;</span> <span class="n">characters</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span>
+        <span class="p">{</span>
+          <span class="n">addLocation</span><span class="p">++;</span>
+        <span class="p">}</span>
+        <span class="n">characters</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+        <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"Found Character which matches Mint ID; "</span><span class="p">+</span> <span class="n">mint</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>This script should compare all characters from one list with the mint received from the web page and add it to a new list which we will use for selectable characters.</p>
 <h1 id='troubleshooting'>Troubleshooting</h1>
 <aside class="notice">
 If you have any issues please feel free to contact me in the support Discords for the covered assets or emailing puppygamingdev@gmail.com

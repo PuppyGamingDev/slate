@@ -295,7 +295,7 @@
     </script>
   </head>
 
-  <body class="index" data-languages="[&quot;csharp&quot;,&quot;html&quot;]">
+  <body class="index" data-languages="[&quot;csharp&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
@@ -306,7 +306,6 @@
       <img src="images/logo-cc913a82.png" class="logo" alt="" />
         <div class="lang-selector">
               <a href="#" data-language-name="csharp">csharp</a>
-              <a href="#" data-language-name="html">html</a>
         </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
@@ -763,93 +762,93 @@ Drag the Managers Gameobject into the new button&#39;s OnClick() and set the fun
 <blockquote>
 <p>Where you would like them, add some buttons for connecting wallet and loggin out of wallet using our functions</p>
 </blockquote>
-<div class="highlight"><pre class="highlight html tab-html"><code>      <span class="nt">&lt;button</span> <span class="na">onclick=</span><span class="s">"getAccount()"</span><span class="nt">&gt;</span>Get Account<span class="nt">&lt;/button&gt;</span>
-      <span class="nt">&lt;button</span> <span class="na">onclick=</span><span class="s">"logoutAccount()"</span><span class="nt">&gt;</span>Logout<span class="nt">&lt;/button&gt;</span>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code>      <span class="p">&lt;</span><span class="n">button</span> <span class="n">onclick</span><span class="p">=</span><span class="s">"getAccount()"</span><span class="p">&gt;</span><span class="n">Get</span> <span class="n">Account</span><span class="p">&lt;/</span><span class="n">button</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="n">button</span> <span class="n">onclick</span><span class="p">=</span><span class="s">"logoutAccount()"</span><span class="p">&gt;</span><span class="n">Logout</span><span class="p">&lt;/</span><span class="n">button</span><span class="p">&gt;</span>
 </code></pre></div>
 <blockquote>
 <p>At the start of the <em>Script</em> region add this var</p>
 </blockquote>
-<div class="highlight"><pre class="highlight html tab-html"><code>var webglPlayer;
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="kt">var</span> <span class="n">webglPlayer</span><span class="p">;</span>
 </code></pre></div>
 <blockquote>
 <p>Search for <em>.then((unityInstance) =&gt; {</em> and on the next line add this</p>
 </blockquote>
-<div class="highlight"><pre class="highlight html tab-html"><code>webglPlayer = unityInstance;
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="n">webglPlayer</span> <span class="p">=</span> <span class="n">unityInstance</span><span class="p">;</span>
 </code></pre></div>
 <blockquote>
 <p>Add this after the Unity parts in the <em><script></em> before the <em></script></em></p>
 </blockquote>
-<div class="highlight"><pre class="highlight html tab-html"><code>      // Custom functions
-      var wallet;
-      var myKey;
-      var tokenResponse;
-      var myTokens = [];
-      async function getAccount() {
-        window.solana.connect();
-        wallet = await window.solana.request({ method: "connect" });
-        // console.log(wallet);
-        myKey = wallet.publicKey.toString();
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code>      <span class="c1">// Custom functions</span>
+      <span class="kt">var</span> <span class="n">wallet</span><span class="p">;</span>
+      <span class="kt">var</span> <span class="n">myKey</span><span class="p">;</span>
+      <span class="kt">var</span> <span class="n">tokenResponse</span><span class="p">;</span>
+      <span class="kt">var</span> <span class="n">myTokens</span> <span class="p">=</span> <span class="p">[];</span>
+      <span class="k">async</span> <span class="n">function</span> <span class="nf">getAccount</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">window</span><span class="p">.</span><span class="n">solana</span><span class="p">.</span><span class="nf">connect</span><span class="p">();</span>
+        <span class="n">wallet</span> <span class="p">=</span> <span class="k">await</span> <span class="n">window</span><span class="p">.</span><span class="n">solana</span><span class="p">.</span><span class="nf">request</span><span class="p">({</span> <span class="n">method</span><span class="p">:</span> <span class="s">"connect"</span> <span class="p">});</span>
+        <span class="c1">// console.log(wallet);</span>
+        <span class="n">myKey</span> <span class="p">=</span> <span class="n">wallet</span><span class="p">.</span><span class="n">publicKey</span><span class="p">.</span><span class="nf">toString</span><span class="p">();</span>
 
-        allTokens();
-      }
+        <span class="nf">allTokens</span><span class="p">();</span>
+      <span class="p">}</span>
 
-      function logoutAccount() {
-        window.solana.request({ method: "disconnect" });
-      }
+      <span class="n">function</span> <span class="nf">logoutAccount</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">window</span><span class="p">.</span><span class="n">solana</span><span class="p">.</span><span class="nf">request</span><span class="p">({</span> <span class="n">method</span><span class="p">:</span> <span class="s">"disconnect"</span> <span class="p">});</span>
+      <span class="p">}</span>
 
-      function allTokens() {
-        console.log("Your Public Key is ", myKey);
-        var url = "https://api.mainnet-beta.solana.com";
+      <span class="n">function</span> <span class="nf">allTokens</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="s">"Your Public Key is "</span><span class="p">,</span> <span class="n">myKey</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">url</span> <span class="p">=</span> <span class="s">"https://api.mainnet-beta.solana.com"</span><span class="p">;</span>
 
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", url);
-        xhr.setRequestHeader("Content-Type", "application/json");
+        <span class="kt">var</span> <span class="n">xhr</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">XMLHttpRequest</span><span class="p">();</span>
+        <span class="n">xhr</span><span class="p">.</span><span class="nf">open</span><span class="p">(</span><span class="s">"POST"</span><span class="p">,</span> <span class="n">url</span><span class="p">);</span>
+        <span class="n">xhr</span><span class="p">.</span><span class="nf">setRequestHeader</span><span class="p">(</span><span class="s">"Content-Type"</span><span class="p">,</span> <span class="s">"application/json"</span><span class="p">);</span>
 
-        xhr.onreadystatechange = function () {
-          if (xhr.readyState === 4) {
-            // console.log(xhr.status);
-            const tokenResponse = JSON.parse(xhr.responseText);
-            // console.log(tokenResponse.result.value);
-            myTokens = tokenResponse.result.value;
-            sendTokenList();
-          }
-        };
-        var data = `
-              {
-                "jsonrpc": "2.0",
-                "id": 1,
-                "method": "getTokenAccountsByOwner",
-                "params": [
-                  "${myKey}",
-                  {
-                    "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
-                  },
-                  {
-                    "encoding": "jsonParsed"
-                  }
-                ]
-              }
-            `;
+        <span class="n">xhr</span><span class="p">.</span><span class="n">onreadystatechange</span> <span class="p">=</span> <span class="nf">function</span> <span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">xhr</span><span class="p">.</span><span class="n">readyState</span> <span class="p">===</span> <span class="m">4</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// console.log(xhr.status);</span>
+            <span class="k">const</span> <span class="n">tokenResponse</span> <span class="p">=</span> <span class="n">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">xhr</span><span class="p">.</span><span class="n">responseText</span><span class="p">);</span>
+            <span class="c1">// console.log(tokenResponse.result.value);</span>
+            <span class="n">myTokens</span> <span class="p">=</span> <span class="n">tokenResponse</span><span class="p">.</span><span class="n">result</span><span class="p">.</span><span class="k">value</span><span class="p">;</span>
+            <span class="nf">sendTokenList</span><span class="p">();</span>
+          <span class="p">}</span>
+        <span class="p">};</span>
+        <span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="err">`</span>
+              <span class="p">{</span>
+                <span class="s">"jsonrpc"</span><span class="p">:</span> <span class="s">"2.0"</span><span class="p">,</span>
+                <span class="s">"id"</span><span class="p">:</span> <span class="m">1</span><span class="p">,</span>
+                <span class="s">"method"</span><span class="p">:</span> <span class="s">"getTokenAccountsByOwner"</span><span class="p">,</span>
+                <span class="s">"params"</span><span class="p">:</span> <span class="p">[</span>
+                  <span class="s">"${myKey}"</span><span class="p">,</span>
+                  <span class="p">{</span>
+                    <span class="s">"programId"</span><span class="p">:</span> <span class="s">"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"</span>
+                  <span class="p">},</span>
+                  <span class="p">{</span>
+                    <span class="s">"encoding"</span><span class="p">:</span> <span class="s">"jsonParsed"</span>
+                  <span class="p">}</span>
+                <span class="p">]</span>
+              <span class="p">}</span>
+            <span class="err">`</span><span class="p">;</span>
 
-        xhr.send(data);
-      }
+        <span class="n">xhr</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="n">data</span><span class="p">);</span>
+      <span class="p">}</span>
 
-      function sendTokenList() {
-        var tokenLength = myTokens.length;
-        for (var i = 0; i <span class="nt">&lt;</span> <span class="nt">tokenLength</span><span class="err">;</span> <span class="na">i</span><span class="err">++)</span> <span class="err">{</span>
-          <span class="na">if</span> <span class="err">(</span>
-            <span class="na">myTokens[i].account.data.parsed.info.tokenAmount.decimals =</span><span class="s">=</span> <span class="err">0</span> <span class="err">&amp;&amp;</span>
-            <span class="na">myTokens</span><span class="err">[</span><span class="na">i</span><span class="err">].</span><span class="na">account.data.parsed.info.tokenAmount.amount</span> <span class="nt">&gt;</span> "0"
-          ) {
-            webglPlayer.SendMessage(
-              "Managers",
-              "ReceiveToken",
-              myTokens[i].account.data.parsed.info.mint
-            );
-            console.log(myTokens[i].account.data.parsed.info.mint);
-          }
-        }
-      }
+      <span class="n">function</span> <span class="nf">sendTokenList</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">tokenLength</span> <span class="p">=</span> <span class="n">myTokens</span><span class="p">.</span><span class="n">length</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">tokenLength</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span>
+            <span class="n">myTokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">account</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">parsed</span><span class="p">.</span><span class="n">info</span><span class="p">.</span><span class="n">tokenAmount</span><span class="p">.</span><span class="n">decimals</span> <span class="p">==</span> <span class="m">0</span> <span class="p">&amp;&amp;</span>
+            <span class="n">myTokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">account</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">parsed</span><span class="p">.</span><span class="n">info</span><span class="p">.</span><span class="n">tokenAmount</span><span class="p">.</span><span class="n">amount</span> <span class="p">&gt;</span> <span class="s">"0"</span>
+          <span class="p">)</span> <span class="p">{</span>
+            <span class="n">webglPlayer</span><span class="p">.</span><span class="nf">SendMessage</span><span class="p">(</span>
+              <span class="s">"Managers"</span><span class="p">,</span>
+              <span class="s">"ReceiveToken"</span><span class="p">,</span>
+              <span class="n">myTokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">account</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">parsed</span><span class="p">.</span><span class="n">info</span><span class="p">.</span><span class="n">mint</span>
+            <span class="p">);</span>
+            <span class="n">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="n">myTokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">account</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">parsed</span><span class="p">.</span><span class="n">info</span><span class="p">.</span><span class="n">mint</span><span class="p">);</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
 </code></pre></div>
 <p>This will add the necessary buttons and functions to the webpage displaying the WebGL build to pass information to the build.</p>
 <h2 id='characterselector-cs'>CharacterSelector.cs?</h2>
@@ -885,7 +884,6 @@ If you have any issues please feel free to contact me in the support Discords fo
       <div class="dark-box">
           <div class="lang-selector">
                 <a href="#" data-language-name="csharp">csharp</a>
-                <a href="#" data-language-name="html">html</a>
           </div>
       </div>
     </div>

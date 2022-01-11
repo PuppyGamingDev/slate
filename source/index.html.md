@@ -3,6 +3,7 @@ title: PuppyGaming Docs
 
 language_tabs: # must be one of https://git.io/vQNgJ
   - csharp
+  - html
 
 toc_footers:
   - <a href='https://portfolio.puppygaming.co.uk'>View my portfolio</a>
@@ -451,6 +452,104 @@ Add you new button and give the *OnClick* the new *OnLoginWithGoogle* function f
 # Solana NFT owned Characters (In Progress)(WebGL)
 
 This is a work in progress on integrating the Phantom Wallet login to the WebGL page and passing the mint for each owned NFT to a script in Unity which will add all mint IDs to a list to be used for comparison against a mintID value each character will have. We will then only allow the characters with a matching mint ID to be usable. This could also be edited with the Cosmetic modification to use NFTs instead of CBS Items.
+
+## WebGL index.html
+
+> Where you would like them, add some buttons for connecting wallet and loggin out of wallet using our functions
+
+```html
+      <button onclick="getAccount()">Get Account</button>
+      <button onclick="logoutAccount()">Logout</button>
+```
+
+> At the start of the *Script* region add this var
+
+```html
+var webglPlayer;
+```
+
+> Search for *.then((unityInstance) => {* and on the next line add this
+
+```html
+webglPlayer = unityInstance;
+```
+
+> Add this after the Unity parts in the *<script>* before the *</script>*
+
+```html
+      // Custom functions
+      var wallet;
+      var myKey;
+      var tokenResponse;
+      var myTokens = [];
+      async function getAccount() {
+        window.solana.connect();
+        wallet = await window.solana.request({ method: "connect" });
+        // console.log(wallet);
+        myKey = wallet.publicKey.toString();
+
+        allTokens();
+      }
+
+      function logoutAccount() {
+        window.solana.request({ method: "disconnect" });
+      }
+
+      function allTokens() {
+        console.log("Your Public Key is ", myKey);
+        var url = "https://api.mainnet-beta.solana.com";
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", url);
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            // console.log(xhr.status);
+            const tokenResponse = JSON.parse(xhr.responseText);
+            // console.log(tokenResponse.result.value);
+            myTokens = tokenResponse.result.value;
+            sendTokenList();
+          }
+        };
+        var data = `
+              {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "getTokenAccountsByOwner",
+                "params": [
+                  "${myKey}",
+                  {
+                    "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+                  },
+                  {
+                    "encoding": "jsonParsed"
+                  }
+                ]
+              }
+            `;
+
+        xhr.send(data);
+      }
+
+      function sendTokenList() {
+        var tokenLength = myTokens.length;
+        for (var i = 0; i < tokenLength; i++) {
+          if (
+            myTokens[i].account.data.parsed.info.tokenAmount.decimals == 0 &&
+            myTokens[i].account.data.parsed.info.tokenAmount.amount > "0"
+          ) {
+            webglPlayer.SendMessage(
+              "Managers",
+              "ReceiveToken",
+              myTokens[i].account.data.parsed.info.mint
+            );
+            console.log(myTokens[i].account.data.parsed.info.mint);
+          }
+        }
+      }
+```
+This will add the necessary buttons and functions to the webpage displaying the WebGL build to pass information to the build.
 
 ## CharacterSelector.cs?
 

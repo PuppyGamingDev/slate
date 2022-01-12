@@ -417,6 +417,9 @@
                     <a href="#characterselector-cs" class="toc-h2 toc-link" data-title="CharacterSelector.cs">CharacterSelector.cs</a>
                   </li>
                   <li>
+                    <a href="#characterdata-cs" class="toc-h2 toc-link" data-title="CharacterData.cs">CharacterData.cs</a>
+                  </li>
+                  <li>
                     <a href="#main-menu-scene-3" class="toc-h2 toc-link" data-title="Main Menu Scene">Main Menu Scene</a>
                   </li>
                   <li>
@@ -440,11 +443,15 @@
 
 <p>Welcome to the modifications documentation for Super Multiplayer Shooter Template. I am hoping to hold all the code snippets and written guide for modifications in my videos and also for some more bespoke modifications I have made. I also go through some of these modifications in my <a href='https://youtube.com/playlist?list=PLic6mrfW6bq6zmv83T0aaXMnogH9oJild'>YouTube playlist</a> if you find it easier go along with a video</p>
 
-<p>Donations are always welcome as I don&#39;t charge for any of these modifications.
-PayPal - <em>puppygamingdev@gmail.com</em> , 
-Solana - <em>DvGPrXra1XgXrUY2skBqrvuAxHRCsgiSBndXhKe6HdhK</em> , 
-BNB(BSC) - <em>0x3D8ECEB3427AeF8Baf8857b0276C7945ac8dA900</em> , 
-If you want to donate in another way or not in a monetary way feel free to contact me at puppygamingdev@gmail.com or on Discord <em>Shiffed#2071</em></p>
+<p>Donations are always welcome as I don&#39;t charge for any of these modifications.</p>
+
+<p>PayPal - <em>puppygamingdev@gmail.com</em> , </p>
+
+<p>Solana - <em>DvGPrXra1XgXrUY2skBqrvuAxHRCsgiSBndXhKe6HdhK</em> , </p>
+
+<p>BNB(BSC) - <em>0x3D8ECEB3427AeF8Baf8857b0276C7945ac8dA900</em> , </p>
+
+<p>If you want to donate in another way or not in a monetary way feel free to contact me at puppygamingdev@gmail.com or on Discord <em>Shiffed#2071</em></p>
 <h1 id='host-can-restart-game'>Host Can Restart Game</h1>
 <p>This is a very simple modification to enable the game&#39;s host to restart the game once it&#39;s finished to avoid going back to the Lobby.</p>
 <h2 id='gamemanager-cs'>GameManager.cs</h2>
@@ -856,7 +863,7 @@ Drag the Managers Gameobject into the new button&#39;s OnClick() and set the fun
             <span class="n">myTokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">account</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">parsed</span><span class="p">.</span><span class="n">info</span><span class="p">.</span><span class="n">tokenAmount</span><span class="p">.</span><span class="n">amount</span> <span class="p">&gt;</span> <span class="s">"0"</span>
           <span class="p">)</span> <span class="p">{</span>
             <span class="n">webglPlayer</span><span class="p">.</span><span class="nf">SendMessage</span><span class="p">(</span>
-              <span class="s">"Managers"</span><span class="p">,</span>
+              <span class="s">"CryptoReceiver"</span><span class="p">,</span>
               <span class="s">"ReceiveToken"</span><span class="p">,</span>
               <span class="n">myTokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">account</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">parsed</span><span class="p">.</span><span class="n">info</span><span class="p">.</span><span class="n">mint</span>
             <span class="p">);</span>
@@ -963,6 +970,13 @@ Drag the Managers Gameobject into the new button&#39;s OnClick() and set the fun
 <span class="p">}</span>
 </code></pre></div>
 <p>This script should compare all characters from one list with the mint received from the web page which is stored in our CryptoReceiver and add it to a new list which we will use for selectable characters.</p>
+<h2 id='characterdata-cs'>CharacterData.cs</h2>
+<blockquote>
+<p>Add this variable</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="kt">string</span> <span class="n">mintID</span><span class="p">;</span>
+</code></pre></div>
+<p>This is the variable for each character that is the mint ID of the NFT it represents</p>
 <h2 id='main-menu-scene-3'>Main Menu Scene</h2><div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="c1">// no code in this section</span>
 </code></pre></div>
 <p>Create a new GameObject called <em>CryptoReceiver</em> and add the <em>CryptoReceiver</em> script to it. In the <em>Managers</em> GameObject you can go to the <em>Character Selector</em> component and set which characters you would like the player to be able to use by default in the <em>Default Characters</em> array, these will always be loaded. Then for any characters you want to be linked to a token, open the CharacterData ScriptableObject for that character and add its mint ID to new variable string we added on it.</p>

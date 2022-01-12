@@ -473,7 +473,7 @@ var webglPlayer;
 webglPlayer = unityInstance;
 ```
 
-> Add this after the Unity parts in the *<script>* before the *</script>*
+> Add this after the Unity parts in the *Script* area, add this
 
 ```csharp
       // Custom functions
@@ -550,29 +550,124 @@ webglPlayer = unityInstance;
 ```
 This will add the necessary buttons and functions to the webpage displaying the WebGL build to pass information to the build.
 
-## CharacterSelector.cs?
+## CryptoReceiver.cs
 
-> This will be our function that receives data from the web page with the NFT mints
+> Replace the contents of the default script with this
 
 ```csharp
-public void ReceiveTokens(string mint)
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class CryptoReceiver : MonoBehaviour
 {
-  foreach (Character c in allCharacters)
-  {
-    if (c.mintID == mint)
+    public static CryptoReceiver CR;
+    public List<string> myTokens;
+
+    void Awake()
     {
-      if (!characters.Contains(c))
-      {
-        int addLocation = 0;
-        while (addLocation < characters.Count)
+        if (CR != null)
         {
-          addLocation++;
+            GameObject.Destroy(CR);
         }
-        characters.Add(c);
-        Debug.Log("Found Character which matches Mint ID; "+ mint);
-      }
+        else
+        {
+            CR = this;
+        }
+        DontDestroyOnLoad(this);
+    }
+    public void ReceiveToken(string mint)
+    {
+        if (!myTokens.Contains(mint))
+        {
+            int addLocation = 0;
+            while (addLocation < myTokens.Count)
+            {
+                addLocation++;
+            }
+            myTokens.Add(mint);
+            Debug.Log("Added NFT with Mint ID:  " + mint);
+        }
     }
 }
 ```
 
-This script should compare all characters from one list with the mint received from the web page and add it to a new list which we will use for selectable characters.
+This script receives the data from the web page javascript functions, passing each mint ID as a string and adding it to an accessable list which can be obtained in any script with *CryptoReceiver.CR.myTokens* , more data will be added in the future e.g icon, metadata.
+
+## CharacterSelector.cs
+
+> Add these references
+
+```csharp
+        public CharacterData[] defaultCharacters;
+        public List<CharacterData> ownedCharacters;
+```
+
+> On the first line of *void Refresh()* add this
+
+```csharp
+GetOwnedCharacters();
+```
+
+> In *void Refresh()* look for *// Repopulate items* and replace that part with this
+
+```csharp
+// Repopulate items:
+for (int i = 0; i < defaultCharacters.Length; i++)
+{
+  CharacterSelectorItem item = Instantiate(itemPrefab, content);
+  item.data = defaultCharacters[i];
+  item.cs = this;
+}
+for (int i = 0; i < ownedCharacters.Count; i++)
+{
+  CharacterSelectorItem item = Instantiate(itemPrefab, content);
+  item.data = ownedCharacters[i];
+  item.cs = this;
+}
+```
+
+> Add this function somewhere else in the script
+
+```csharp
+public void GetOwnedCharacters()
+{
+  foreach (CharacterData c in characters)
+  {
+    foreach (string mint in CryptoReceiver.CR.myTokens)
+    {
+      if (mint == c.mintID)
+      {
+        if (!ownedCharacters.Contains(c))
+        {
+          int addLocation = 0;
+          while (addLocation < ownedCharacters.Count)
+          {
+            addLocation++;
+          }
+          ownedCharacters.Add(c);
+          Debug.Log("Added Character " + c.name);
+        }
+      }
+    }
+  }
+}
+```
+
+This script should compare all characters from one list with the mint received from the web page which is stored in our CryptoReceiver and add it to a new list which we will use for selectable characters.
+
+## Main Menu Scene
+
+```csharp
+// no code in this section
+```
+
+Create a new GameObject called *CryptoReceiver* and add the *CryptoReceiver* script to it. In the *Managers* GameObject you can go to the *Character Selector* component and set which characters you would like the player to be able to use by default in the *Default Characters* array, these will always be loaded. Then for any characters you want to be linked to a token, open the CharacterData ScriptableObject for that character and add its mint ID to new variable string we added on it.
+
+## WebGL page
+
+```csharp
+// no code in this section
+```
+
+Once you've done everything and uploaded your latest WebGL build, wait until the Main Menu scene has loaded and then click on the *Get Account* button, you will get a popup to load your Phantom Wallet, just approve and it'll pass your owned NFTs to the WebGL build. If you click it before the scene has loaded, it can always be clicked again once loaded if your linked characters don't appear.

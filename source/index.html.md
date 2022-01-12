@@ -25,9 +25,13 @@ meta:
 Welcome to the modifications documentation for Super Multiplayer Shooter Template. I am hoping to hold all the code snippets and written guide for modifications in my videos and also for some more bespoke modifications I have made. I also go through some of these modifications in my <a href='https://youtube.com/playlist?list=PLic6mrfW6bq6zmv83T0aaXMnogH9oJild'>YouTube playlist</a> if you find it easier go along with a video
 
 Donations are always welcome as I don't charge for any of these modifications.
+
 PayPal - *puppygamingdev@gmail.com* , 
+
 Solana - *DvGPrXra1XgXrUY2skBqrvuAxHRCsgiSBndXhKe6HdhK* , 
+
 BNB(BSC) - *0x3D8ECEB3427AeF8Baf8857b0276C7945ac8dA900* , 
+
 If you want to donate in another way or not in a monetary way feel free to contact me at puppygamingdev@gmail.com or on Discord *Shiffed#2071*
 
 # Host Can Restart Game
@@ -545,7 +549,7 @@ webglPlayer = unityInstance;
             myTokens[i].account.data.parsed.info.tokenAmount.amount > "0"
           ) {
             webglPlayer.SendMessage(
-              "Managers",
+              "CryptoReceiver",
               "ReceiveToken",
               myTokens[i].account.data.parsed.info.mint
             );
@@ -661,6 +665,16 @@ public void GetOwnedCharacters()
 ```
 
 This script should compare all characters from one list with the mint received from the web page which is stored in our CryptoReceiver and add it to a new list which we will use for selectable characters.
+
+## CharacterData.cs
+
+> Add this variable
+
+```csharp
+public string mintID;
+```
+
+This is the variable for each character that is the mint ID of the NFT it represents
 
 ## Main Menu Scene
 

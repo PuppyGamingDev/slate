@@ -411,7 +411,16 @@
                     <a href="#webgl-index-html" class="toc-h2 toc-link" data-title="WebGL index.html">WebGL index.html</a>
                   </li>
                   <li>
-                    <a href="#characterselector-cs" class="toc-h2 toc-link" data-title="CharacterSelector.cs?">CharacterSelector.cs?</a>
+                    <a href="#cryptoreceiver-cs" class="toc-h2 toc-link" data-title="CryptoReceiver.cs">CryptoReceiver.cs</a>
+                  </li>
+                  <li>
+                    <a href="#characterselector-cs" class="toc-h2 toc-link" data-title="CharacterSelector.cs">CharacterSelector.cs</a>
+                  </li>
+                  <li>
+                    <a href="#main-menu-scene-3" class="toc-h2 toc-link" data-title="Main Menu Scene">Main Menu Scene</a>
+                  </li>
+                  <li>
+                    <a href="#webgl-page" class="toc-h2 toc-link" data-title="WebGL page">WebGL page</a>
                   </li>
               </ul>
           </li>
@@ -776,7 +785,7 @@ Drag the Managers Gameobject into the new button&#39;s OnClick() and set the fun
 <div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="n">webglPlayer</span> <span class="p">=</span> <span class="n">unityInstance</span><span class="p">;</span>
 </code></pre></div>
 <blockquote>
-<p>Add this after the Unity parts in the <em><script></em> before the <em></script></em></p>
+<p>Add this after the Unity parts in the <em>Script</em> area, add this</p>
 </blockquote>
 <div class="highlight"><pre class="highlight csharp tab-csharp"><code>      <span class="c1">// Custom functions</span>
       <span class="kt">var</span> <span class="n">wallet</span><span class="p">;</span>
@@ -851,30 +860,109 @@ Drag the Managers Gameobject into the new button&#39;s OnClick() and set the fun
       <span class="p">}</span>
 </code></pre></div>
 <p>This will add the necessary buttons and functions to the webpage displaying the WebGL build to pass information to the build.</p>
-<h2 id='characterselector-cs'>CharacterSelector.cs?</h2>
+<h2 id='cryptoreceiver-cs'>CryptoReceiver.cs</h2>
 <blockquote>
-<p>This will be our function that receives data from the web page with the NFT mints</p>
+<p>Replace the contents of the default script with this</p>
 </blockquote>
-<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="k">void</span> <span class="nf">ReceiveTokens</span><span class="p">(</span><span class="kt">string</span> <span class="n">mint</span><span class="p">)</span>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">using</span> <span class="nn">System.Collections</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">CryptoReceiver</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
 <span class="p">{</span>
-  <span class="k">foreach</span> <span class="p">(</span><span class="n">Character</span> <span class="n">c</span> <span class="k">in</span> <span class="n">allCharacters</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="n">mintID</span> <span class="p">==</span> <span class="n">mint</span><span class="p">)</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="n">CryptoReceiver</span> <span class="n">CR</span><span class="p">;</span>
+    <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="n">myTokens</span><span class="p">;</span>
+
+    <span class="k">void</span> <span class="nf">Awake</span><span class="p">()</span>
     <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(!</span><span class="n">characters</span><span class="p">.</span><span class="nf">Contains</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
-      <span class="p">{</span>
-        <span class="kt">int</span> <span class="n">addLocation</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
-        <span class="k">while</span> <span class="p">(</span><span class="n">addLocation</span> <span class="p">&lt;</span> <span class="n">characters</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">CR</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span>
         <span class="p">{</span>
-          <span class="n">addLocation</span><span class="p">++;</span>
+            <span class="n">GameObject</span><span class="p">.</span><span class="nf">Destroy</span><span class="p">(</span><span class="n">CR</span><span class="p">);</span>
         <span class="p">}</span>
-        <span class="n">characters</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
-        <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"Found Character which matches Mint ID; "</span><span class="p">+</span> <span class="n">mint</span><span class="p">);</span>
-      <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="n">CR</span> <span class="p">=</span> <span class="k">this</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nf">DontDestroyOnLoad</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">ReceiveToken</span><span class="p">(</span><span class="kt">string</span> <span class="n">mint</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(!</span><span class="n">myTokens</span><span class="p">.</span><span class="nf">Contains</span><span class="p">(</span><span class="n">mint</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="kt">int</span> <span class="n">addLocation</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+            <span class="k">while</span> <span class="p">(</span><span class="n">addLocation</span> <span class="p">&lt;</span> <span class="n">myTokens</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">addLocation</span><span class="p">++;</span>
+            <span class="p">}</span>
+            <span class="n">myTokens</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="n">mint</span><span class="p">);</span>
+            <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"Added NFT with Mint ID:  "</span> <span class="p">+</span> <span class="n">mint</span><span class="p">);</span>
+        <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>This script should compare all characters from one list with the mint received from the web page and add it to a new list which we will use for selectable characters.</p>
+<p>This script receives the data from the web page javascript functions, passing each mint ID as a string and adding it to an accessable list which can be obtained in any script with <em>CryptoReceiver.CR.myTokens</em> , more data will be added in the future e.g icon, metadata.</p>
+<h2 id='characterselector-cs'>CharacterSelector.cs</h2>
+<blockquote>
+<p>Add these references</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code>        <span class="k">public</span> <span class="n">CharacterData</span><span class="p">[]</span> <span class="n">defaultCharacters</span><span class="p">;</span>
+        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">CharacterData</span><span class="p">&gt;</span> <span class="n">ownedCharacters</span><span class="p">;</span>
+</code></pre></div>
+<blockquote>
+<p>On the first line of <em>void Refresh()</em> add this</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="nf">GetOwnedCharacters</span><span class="p">();</span>
+</code></pre></div>
+<blockquote>
+<p>In <em>void Refresh()</em> look for <em>// Repopulate items</em> and replace that part with this</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="c1">// Repopulate items:</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">defaultCharacters</span><span class="p">.</span><span class="n">Length</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+<span class="p">{</span>
+  <span class="n">CharacterSelectorItem</span> <span class="n">item</span> <span class="p">=</span> <span class="nf">Instantiate</span><span class="p">(</span><span class="n">itemPrefab</span><span class="p">,</span> <span class="n">content</span><span class="p">);</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">data</span> <span class="p">=</span> <span class="n">defaultCharacters</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">cs</span> <span class="p">=</span> <span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">ownedCharacters</span><span class="p">.</span><span class="n">Count</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+<span class="p">{</span>
+  <span class="n">CharacterSelectorItem</span> <span class="n">item</span> <span class="p">=</span> <span class="nf">Instantiate</span><span class="p">(</span><span class="n">itemPrefab</span><span class="p">,</span> <span class="n">content</span><span class="p">);</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">data</span> <span class="p">=</span> <span class="n">ownedCharacters</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">cs</span> <span class="p">=</span> <span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<blockquote>
+<p>Add this function somewhere else in the script</p>
+</blockquote>
+<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="k">void</span> <span class="nf">GetOwnedCharacters</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="k">foreach</span> <span class="p">(</span><span class="n">CharacterData</span> <span class="n">c</span> <span class="k">in</span> <span class="n">characters</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">foreach</span> <span class="p">(</span><span class="kt">string</span> <span class="n">mint</span> <span class="k">in</span> <span class="n">CryptoReceiver</span><span class="p">.</span><span class="n">CR</span><span class="p">.</span><span class="n">myTokens</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">mint</span> <span class="p">==</span> <span class="n">c</span><span class="p">.</span><span class="n">mintID</span><span class="p">)</span>
+      <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(!</span><span class="n">ownedCharacters</span><span class="p">.</span><span class="nf">Contains</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+        <span class="p">{</span>
+          <span class="kt">int</span> <span class="n">addLocation</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+          <span class="k">while</span> <span class="p">(</span><span class="n">addLocation</span> <span class="p">&lt;</span> <span class="n">ownedCharacters</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span>
+          <span class="p">{</span>
+            <span class="n">addLocation</span><span class="p">++;</span>
+          <span class="p">}</span>
+          <span class="n">ownedCharacters</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+          <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"Added Character "</span> <span class="p">+</span> <span class="n">c</span><span class="p">.</span><span class="n">name</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>This script should compare all characters from one list with the mint received from the web page which is stored in our CryptoReceiver and add it to a new list which we will use for selectable characters.</p>
+<h2 id='main-menu-scene-3'>Main Menu Scene</h2><div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="c1">// no code in this section</span>
+</code></pre></div>
+<p>Create a new GameObject called <em>CryptoReceiver</em> and add the <em>CryptoReceiver</em> script to it. In the <em>Managers</em> GameObject you can go to the <em>Character Selector</em> component and set which characters you would like the player to be able to use by default in the <em>Default Characters</em> array, these will always be loaded. Then for any characters you want to be linked to a token, open the CharacterData ScriptableObject for that character and add its mint ID to new variable string we added on it.</p>
+<h2 id='webgl-page'>WebGL page</h2><div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="c1">// no code in this section</span>
+</code></pre></div>
+<p>Once you&#39;ve done everything and uploaded your latest WebGL build, wait until the Main Menu scene has loaded and then click on the <em>Get Account</em> button, you will get a popup to load your Phantom Wallet, just approve and it&#39;ll pass your owned NFTs to the WebGL build. If you click it before the scene has loaded, it can always be clicked again once loaded if your linked characters don&#39;t appear.</p>
 <h1 id='troubleshooting'>Troubleshooting</h1>
 <aside class="notice">
 If you have any issues please feel free to contact me in the support Discords for the covered assets or emailing puppygamingdev@gmail.com

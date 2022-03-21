@@ -61,7 +61,7 @@ if (PhotonNetwork.IsMasterClient)
 PhotonNetwork.AutomaticallySyncScene = true;
 ```
 
-> Add these Restart methods
+> Add these Restart & Reset methods
 
 ```csharp
 public void RestartButton()
@@ -76,10 +76,24 @@ void Restart()
   table.Add("kills", 0);
   table.Add("deaths", 0);
   table.Add("otherscore", 0);
+  ResetBotStats();
   PhotonNetwork.LocalPlayer.SetCustomProperties(table);
   ui.UpdateBoards();
   Debug.Log("Stats Reset");
   PhotonNetwork.LoadLevel("Game");
+}
+public void ResetBotStats()
+{
+  ExitGames.Client.Photon.Hashtable h = new ExitGames.Client.Photon.Hashtable();
+
+  // Get each bot's scores and store them as a Vector3:
+  bScores = new Vector3[bots.Length];
+  for (int i = 0; i < bots.Length; i++)
+  {
+    bScores[i] = new Vector3((int)0, (int)0, (int)0);
+  }
+  h.Add("botScores", bScores);
+  PhotonNetwork.CurrentRoom.SetCustomProperties(h);
 }
 ```
 This is the only script that needs editing for this modification.
@@ -458,236 +472,15 @@ This is essentially the Code to activate the Play Games Platform and how to logi
 
 Add you new button and give the *OnClick* the new *OnLoginWithGoogle* function from LoginForm.cs
 
-# Solana NFT owned Characters (In Progress)(WebGL)
+# Bot names are the character names
+ This is a simple one to have the bot's names be the character objects name with the random number after it.
 
-This is a work in progress on integrating the Phantom Wallet login to the WebGL page and passing the mint for each owned NFT to a script in Unity which will add all mint IDs to a list to be used for comparison against a mintID value each character will have. We will then only allow the characters with a matching mint ID to be usable. This could also be edited with the Cosmetic modification to use NFTs instead of CBS Items.
+## Connector.cs
 
-## WebGL index.html
-
-> Where you would like them, add some buttons for connecting wallet and loggin out of wallet using our functions
-
+> Replace the 2 lines after *// Setup the new bot* with these
 ```csharp
-      <button onclick="getAccount()">Get Account</button>
-      <button onclick="logoutAccount()">Logout</button>
+b[b.Length - 1].characterUsing = Random.Range(0, characterSelector.characters.Length);
+b[b.Length - 1].name = characterSelector.characters[b[b.Length - 1].characterUsing].name + " - " + bnp;
 ```
 
-> At the start of the *Script* region add this var
-
-```csharp
-var webglPlayer;
-```
-
-> Search for *.then((unityInstance) => {* and on the next line add this
-
-```csharp
-webglPlayer = unityInstance;
-```
-
-> Add this after the Unity parts in the *Script* area, add this
-
-```csharp
-      // Custom functions
-      var wallet;
-      var myKey;
-      var tokenResponse;
-      var myTokens = [];
-      async function getAccount() {
-        window.solana.connect();
-        wallet = await window.solana.request({ method: "connect" });
-        // console.log(wallet);
-        myKey = wallet.publicKey.toString();
-
-        allTokens();
-      }
-
-      function logoutAccount() {
-        window.solana.request({ method: "disconnect" });
-      }
-
-      function allTokens() {
-        console.log("Your Public Key is ", myKey);
-        var url = "https://api.mainnet-beta.solana.com";
-
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", url);
-        xhr.setRequestHeader("Content-Type", "application/json");
-
-        xhr.onreadystatechange = function () {
-          if (xhr.readyState === 4) {
-            // console.log(xhr.status);
-            const tokenResponse = JSON.parse(xhr.responseText);
-            // console.log(tokenResponse.result.value);
-            myTokens = tokenResponse.result.value;
-            sendTokenList();
-          }
-        };
-        var data = `
-              {
-                "jsonrpc": "2.0",
-                "id": 1,
-                "method": "getTokenAccountsByOwner",
-                "params": [
-                  "${myKey}",
-                  {
-                    "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
-                  },
-                  {
-                    "encoding": "jsonParsed"
-                  }
-                ]
-              }
-            `;
-
-        xhr.send(data);
-      }
-
-      function sendTokenList() {
-        var tokenLength = myTokens.length;
-        for (var i = 0; i < tokenLength; i++) {
-          if (
-            myTokens[i].account.data.parsed.info.tokenAmount.decimals == 0 &&
-            myTokens[i].account.data.parsed.info.tokenAmount.amount > "0"
-          ) {
-            webglPlayer.SendMessage(
-              "CryptoReceiver",
-              "ReceiveToken",
-              myTokens[i].account.data.parsed.info.mint
-            );
-            console.log(myTokens[i].account.data.parsed.info.mint);
-          }
-        }
-      }
-```
-This will add the necessary buttons and functions to the webpage displaying the WebGL build to pass information to the build.
-
-## CryptoReceiver.cs
-
-> Replace the contents of the default script with this
-
-```csharp
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class CryptoReceiver : MonoBehaviour
-{
-    public static CryptoReceiver CR;
-    public List<string> myTokens;
-
-    void Awake()
-    {
-        if (CR != null)
-        {
-            GameObject.Destroy(CR);
-        }
-        else
-        {
-            CR = this;
-        }
-        DontDestroyOnLoad(this);
-    }
-    public void ReceiveToken(string mint)
-    {
-        if (!myTokens.Contains(mint))
-        {
-            int addLocation = 0;
-            while (addLocation < myTokens.Count)
-            {
-                addLocation++;
-            }
-            myTokens.Add(mint);
-            Debug.Log("Added NFT with Mint ID:  " + mint);
-        }
-    }
-}
-```
-
-This script receives the data from the web page javascript functions, passing each mint ID as a string and adding it to an accessable list which can be obtained in any script with *CryptoReceiver.CR.myTokens* , more data will be added in the future e.g icon, metadata.
-
-## CharacterSelector.cs
-
-> Add these references
-
-```csharp
-        public CharacterData[] defaultCharacters;
-        public List<CharacterData> ownedCharacters;
-```
-
-> On the first line of *void Refresh()* add this
-
-```csharp
-GetOwnedCharacters();
-```
-
-> In *void Refresh()* look for *// Repopulate items* and replace that part with this
-
-```csharp
-// Repopulate items:
-for (int i = 0; i < defaultCharacters.Length; i++)
-{
-  CharacterSelectorItem item = Instantiate(itemPrefab, content);
-  item.data = defaultCharacters[i];
-  item.cs = this;
-}
-for (int i = 0; i < ownedCharacters.Count; i++)
-{
-  CharacterSelectorItem item = Instantiate(itemPrefab, content);
-  item.data = ownedCharacters[i];
-  item.cs = this;
-}
-```
-
-> Add this function somewhere else in the script
-
-```csharp
-public void GetOwnedCharacters()
-{
-  foreach (CharacterData c in characters)
-  {
-    foreach (string mint in CryptoReceiver.CR.myTokens)
-    {
-      if (mint == c.mintID)
-      {
-        if (!ownedCharacters.Contains(c))
-        {
-          int addLocation = 0;
-          while (addLocation < ownedCharacters.Count)
-          {
-            addLocation++;
-          }
-          ownedCharacters.Add(c);
-          Debug.Log("Added Character " + c.name);
-        }
-      }
-    }
-  }
-}
-```
-
-This script should compare all characters from one list with the mint received from the web page which is stored in our CryptoReceiver and add it to a new list which we will use for selectable characters.
-
-## CharacterData.cs
-
-> Add this variable
-
-```csharp
-public string mintID;
-```
-
-This is the variable for each character that is the mint ID of the NFT it represents
-
-## Main Menu Scene
-
-```csharp
-// no code in this section
-```
-
-Create a new GameObject called *CryptoReceiver* and add the *CryptoReceiver* script to it. In the *Managers* GameObject you can go to the *Character Selector* component and set which characters you would like the player to be able to use by default in the *Default Characters* array, these will always be loaded. Then for any characters you want to be linked to a token, open the CharacterData ScriptableObject for that character and add its mint ID to new variable string we added on it.
-
-## WebGL page
-
-```csharp
-// no code in this section
-```
-
-Once you've done everything and uploaded your latest WebGL build, wait until the Main Menu scene has loaded and then click on the *Get Account* button, you will get a popup to load your Phantom Wallet, just approve and it'll pass your owned NFTs to the WebGL build. If you click it before the scene has loaded, it can always be clicked again once loaded if your linked characters don't appear.
+It's honestly as simple as 2 lines of code in a single script, enjoy.

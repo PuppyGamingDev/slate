@@ -405,25 +405,10 @@
               </ul>
           </li>
           <li>
-            <a href="#solana-nft-owned-characters-in-progress-webgl" class="toc-h1 toc-link" data-title="Solana NFT owned Characters (In Progress)(WebGL)">Solana NFT owned Characters (In Progress)(WebGL)</a>
+            <a href="#bot-names-are-the-character-names" class="toc-h1 toc-link" data-title="Bot names are the character names">Bot names are the character names</a>
               <ul class="toc-list-h2">
                   <li>
-                    <a href="#webgl-index-html" class="toc-h2 toc-link" data-title="WebGL index.html">WebGL index.html</a>
-                  </li>
-                  <li>
-                    <a href="#cryptoreceiver-cs" class="toc-h2 toc-link" data-title="CryptoReceiver.cs">CryptoReceiver.cs</a>
-                  </li>
-                  <li>
-                    <a href="#characterselector-cs" class="toc-h2 toc-link" data-title="CharacterSelector.cs">CharacterSelector.cs</a>
-                  </li>
-                  <li>
-                    <a href="#characterdata-cs" class="toc-h2 toc-link" data-title="CharacterData.cs">CharacterData.cs</a>
-                  </li>
-                  <li>
-                    <a href="#main-menu-scene-3" class="toc-h2 toc-link" data-title="Main Menu Scene">Main Menu Scene</a>
-                  </li>
-                  <li>
-                    <a href="#webgl-page" class="toc-h2 toc-link" data-title="WebGL page">WebGL page</a>
+                    <a href="#connector-cs-2" class="toc-h2 toc-link" data-title="Connector.cs">Connector.cs</a>
                   </li>
               </ul>
           </li>
@@ -474,7 +459,7 @@
 <div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="n">PhotonNetwork</span><span class="p">.</span><span class="n">AutomaticallySyncScene</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
 </code></pre></div>
 <blockquote>
-<p>Add these Restart methods</p>
+<p>Add these Restart &amp; Reset methods</p>
 </blockquote>
 <div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="k">void</span> <span class="nf">RestartButton</span><span class="p">()</span>
 <span class="p">{</span>
@@ -488,10 +473,24 @@
   <span class="n">table</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="s">"kills"</span><span class="p">,</span> <span class="m">0</span><span class="p">);</span>
   <span class="n">table</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="s">"deaths"</span><span class="p">,</span> <span class="m">0</span><span class="p">);</span>
   <span class="n">table</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="s">"otherscore"</span><span class="p">,</span> <span class="m">0</span><span class="p">);</span>
+  <span class="nf">ResetBotStats</span><span class="p">();</span>
   <span class="n">PhotonNetwork</span><span class="p">.</span><span class="n">LocalPlayer</span><span class="p">.</span><span class="nf">SetCustomProperties</span><span class="p">(</span><span class="n">table</span><span class="p">);</span>
   <span class="n">ui</span><span class="p">.</span><span class="nf">UpdateBoards</span><span class="p">();</span>
   <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"Stats Reset"</span><span class="p">);</span>
   <span class="n">PhotonNetwork</span><span class="p">.</span><span class="nf">LoadLevel</span><span class="p">(</span><span class="s">"Game"</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">public</span> <span class="k">void</span> <span class="nf">ResetBotStats</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">ExitGames</span><span class="p">.</span><span class="n">Client</span><span class="p">.</span><span class="n">Photon</span><span class="p">.</span><span class="n">Hashtable</span> <span class="n">h</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ExitGames</span><span class="p">.</span><span class="n">Client</span><span class="p">.</span><span class="n">Photon</span><span class="p">.</span><span class="nf">Hashtable</span><span class="p">();</span>
+
+  <span class="c1">// Get each bot's scores and store them as a Vector3:</span>
+  <span class="n">bScores</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Vector3</span><span class="p">[</span><span class="n">bots</span><span class="p">.</span><span class="n">Length</span><span class="p">];</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">bots</span><span class="p">.</span><span class="n">Length</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+  <span class="p">{</span>
+    <span class="n">bScores</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Vector3</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span><span class="m">0</span><span class="p">,</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="m">0</span><span class="p">,</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="m">0</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">h</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="s">"botScores"</span><span class="p">,</span> <span class="n">bScores</span><span class="p">);</span>
+  <span class="n">PhotonNetwork</span><span class="p">.</span><span class="n">CurrentRoom</span><span class="p">.</span><span class="nf">SetCustomProperties</span><span class="p">(</span><span class="n">h</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>This is the only script that needs editing for this modification.</p>
@@ -778,211 +777,18 @@ Drag the Managers Gameobject into the new button&#39;s OnClick() and set the fun
 <h2 id='login-scene'>Login Scene</h2><div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="c1">// No code in this section</span>
 </code></pre></div>
 <p>Add you new button and give the <em>OnClick</em> the new <em>OnLoginWithGoogle</em> function from LoginForm.cs</p>
-<h1 id='solana-nft-owned-characters-in-progress-webgl'>Solana NFT owned Characters (In Progress)(WebGL)</h1>
-<p>This is a work in progress on integrating the Phantom Wallet login to the WebGL page and passing the mint for each owned NFT to a script in Unity which will add all mint IDs to a list to be used for comparison against a mintID value each character will have. We will then only allow the characters with a matching mint ID to be usable. This could also be edited with the Cosmetic modification to use NFTs instead of CBS Items.</p>
-<h2 id='webgl-index-html'>WebGL index.html</h2>
+<h1 id='bot-names-are-the-character-names'>Bot names are the character names</h1>
+<p>This is a simple one to have the bot&#39;s names be the character objects name with the random number after it.</p>
+<h2 id='connector-cs-2'>Connector.cs</h2>
 <blockquote>
-<p>Where you would like them, add some buttons for connecting wallet and loggin out of wallet using our functions</p>
+<p>Replace the 2 lines after <em>// Setup the new bot</em> with these
+<code>csharp
+b[b.Length - 1].characterUsing = Random.Range(0, characterSelector.characters.Length);
+b[b.Length - 1].name = characterSelector.characters[b[b.Length - 1].characterUsing].name + &quot; - &quot; + bnp;
+</code></p>
 </blockquote>
-<div class="highlight"><pre class="highlight csharp tab-csharp"><code>      <span class="p">&lt;</span><span class="n">button</span> <span class="n">onclick</span><span class="p">=</span><span class="s">"getAccount()"</span><span class="p">&gt;</span><span class="n">Get</span> <span class="n">Account</span><span class="p">&lt;/</span><span class="n">button</span><span class="p">&gt;</span>
-      <span class="p">&lt;</span><span class="n">button</span> <span class="n">onclick</span><span class="p">=</span><span class="s">"logoutAccount()"</span><span class="p">&gt;</span><span class="n">Logout</span><span class="p">&lt;/</span><span class="n">button</span><span class="p">&gt;</span>
-</code></pre></div>
-<blockquote>
-<p>At the start of the <em>Script</em> region add this var</p>
-</blockquote>
-<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="kt">var</span> <span class="n">webglPlayer</span><span class="p">;</span>
-</code></pre></div>
-<blockquote>
-<p>Search for <em>.then((unityInstance) =&gt; {</em> and on the next line add this</p>
-</blockquote>
-<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="n">webglPlayer</span> <span class="p">=</span> <span class="n">unityInstance</span><span class="p">;</span>
-</code></pre></div>
-<blockquote>
-<p>Add this after the Unity parts in the <em>Script</em> area, add this</p>
-</blockquote>
-<div class="highlight"><pre class="highlight csharp tab-csharp"><code>      <span class="c1">// Custom functions</span>
-      <span class="kt">var</span> <span class="n">wallet</span><span class="p">;</span>
-      <span class="kt">var</span> <span class="n">myKey</span><span class="p">;</span>
-      <span class="kt">var</span> <span class="n">tokenResponse</span><span class="p">;</span>
-      <span class="kt">var</span> <span class="n">myTokens</span> <span class="p">=</span> <span class="p">[];</span>
-      <span class="k">async</span> <span class="n">function</span> <span class="nf">getAccount</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">window</span><span class="p">.</span><span class="n">solana</span><span class="p">.</span><span class="nf">connect</span><span class="p">();</span>
-        <span class="n">wallet</span> <span class="p">=</span> <span class="k">await</span> <span class="n">window</span><span class="p">.</span><span class="n">solana</span><span class="p">.</span><span class="nf">request</span><span class="p">({</span> <span class="n">method</span><span class="p">:</span> <span class="s">"connect"</span> <span class="p">});</span>
-        <span class="c1">// console.log(wallet);</span>
-        <span class="n">myKey</span> <span class="p">=</span> <span class="n">wallet</span><span class="p">.</span><span class="n">publicKey</span><span class="p">.</span><span class="nf">toString</span><span class="p">();</span>
 
-        <span class="nf">allTokens</span><span class="p">();</span>
-      <span class="p">}</span>
-
-      <span class="n">function</span> <span class="nf">logoutAccount</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">window</span><span class="p">.</span><span class="n">solana</span><span class="p">.</span><span class="nf">request</span><span class="p">({</span> <span class="n">method</span><span class="p">:</span> <span class="s">"disconnect"</span> <span class="p">});</span>
-      <span class="p">}</span>
-
-      <span class="n">function</span> <span class="nf">allTokens</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="s">"Your Public Key is "</span><span class="p">,</span> <span class="n">myKey</span><span class="p">);</span>
-        <span class="kt">var</span> <span class="n">url</span> <span class="p">=</span> <span class="s">"https://api.mainnet-beta.solana.com"</span><span class="p">;</span>
-
-        <span class="kt">var</span> <span class="n">xhr</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">XMLHttpRequest</span><span class="p">();</span>
-        <span class="n">xhr</span><span class="p">.</span><span class="nf">open</span><span class="p">(</span><span class="s">"POST"</span><span class="p">,</span> <span class="n">url</span><span class="p">);</span>
-        <span class="n">xhr</span><span class="p">.</span><span class="nf">setRequestHeader</span><span class="p">(</span><span class="s">"Content-Type"</span><span class="p">,</span> <span class="s">"application/json"</span><span class="p">);</span>
-
-        <span class="n">xhr</span><span class="p">.</span><span class="n">onreadystatechange</span> <span class="p">=</span> <span class="nf">function</span> <span class="p">()</span> <span class="p">{</span>
-          <span class="k">if</span> <span class="p">(</span><span class="n">xhr</span><span class="p">.</span><span class="n">readyState</span> <span class="p">===</span> <span class="m">4</span><span class="p">)</span> <span class="p">{</span>
-            <span class="c1">// console.log(xhr.status);</span>
-            <span class="k">const</span> <span class="n">tokenResponse</span> <span class="p">=</span> <span class="n">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">xhr</span><span class="p">.</span><span class="n">responseText</span><span class="p">);</span>
-            <span class="c1">// console.log(tokenResponse.result.value);</span>
-            <span class="n">myTokens</span> <span class="p">=</span> <span class="n">tokenResponse</span><span class="p">.</span><span class="n">result</span><span class="p">.</span><span class="k">value</span><span class="p">;</span>
-            <span class="nf">sendTokenList</span><span class="p">();</span>
-          <span class="p">}</span>
-        <span class="p">};</span>
-        <span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="err">`</span>
-              <span class="p">{</span>
-                <span class="s">"jsonrpc"</span><span class="p">:</span> <span class="s">"2.0"</span><span class="p">,</span>
-                <span class="s">"id"</span><span class="p">:</span> <span class="m">1</span><span class="p">,</span>
-                <span class="s">"method"</span><span class="p">:</span> <span class="s">"getTokenAccountsByOwner"</span><span class="p">,</span>
-                <span class="s">"params"</span><span class="p">:</span> <span class="p">[</span>
-                  <span class="s">"${myKey}"</span><span class="p">,</span>
-                  <span class="p">{</span>
-                    <span class="s">"programId"</span><span class="p">:</span> <span class="s">"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"</span>
-                  <span class="p">},</span>
-                  <span class="p">{</span>
-                    <span class="s">"encoding"</span><span class="p">:</span> <span class="s">"jsonParsed"</span>
-                  <span class="p">}</span>
-                <span class="p">]</span>
-              <span class="p">}</span>
-            <span class="err">`</span><span class="p">;</span>
-
-        <span class="n">xhr</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="n">data</span><span class="p">);</span>
-      <span class="p">}</span>
-
-      <span class="n">function</span> <span class="nf">sendTokenList</span><span class="p">()</span> <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">tokenLength</span> <span class="p">=</span> <span class="n">myTokens</span><span class="p">.</span><span class="n">length</span><span class="p">;</span>
-        <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">tokenLength</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span> <span class="p">{</span>
-          <span class="k">if</span> <span class="p">(</span>
-            <span class="n">myTokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">account</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">parsed</span><span class="p">.</span><span class="n">info</span><span class="p">.</span><span class="n">tokenAmount</span><span class="p">.</span><span class="n">decimals</span> <span class="p">==</span> <span class="m">0</span> <span class="p">&amp;&amp;</span>
-            <span class="n">myTokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">account</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">parsed</span><span class="p">.</span><span class="n">info</span><span class="p">.</span><span class="n">tokenAmount</span><span class="p">.</span><span class="n">amount</span> <span class="p">&gt;</span> <span class="s">"0"</span>
-          <span class="p">)</span> <span class="p">{</span>
-            <span class="n">webglPlayer</span><span class="p">.</span><span class="nf">SendMessage</span><span class="p">(</span>
-              <span class="s">"CryptoReceiver"</span><span class="p">,</span>
-              <span class="s">"ReceiveToken"</span><span class="p">,</span>
-              <span class="n">myTokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">account</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">parsed</span><span class="p">.</span><span class="n">info</span><span class="p">.</span><span class="n">mint</span>
-            <span class="p">);</span>
-            <span class="n">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="n">myTokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">account</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">parsed</span><span class="p">.</span><span class="n">info</span><span class="p">.</span><span class="n">mint</span><span class="p">);</span>
-          <span class="p">}</span>
-        <span class="p">}</span>
-      <span class="p">}</span>
-</code></pre></div>
-<p>This will add the necessary buttons and functions to the webpage displaying the WebGL build to pass information to the build.</p>
-<h2 id='cryptoreceiver-cs'>CryptoReceiver.cs</h2>
-<blockquote>
-<p>Replace the contents of the default script with this</p>
-</blockquote>
-<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">using</span> <span class="nn">System.Collections</span><span class="p">;</span>
-<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
-<span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
-
-<span class="k">public</span> <span class="k">class</span> <span class="nc">CryptoReceiver</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
-<span class="p">{</span>
-    <span class="k">public</span> <span class="k">static</span> <span class="n">CryptoReceiver</span> <span class="n">CR</span><span class="p">;</span>
-    <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="n">myTokens</span><span class="p">;</span>
-
-    <span class="k">void</span> <span class="nf">Awake</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">CR</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">GameObject</span><span class="p">.</span><span class="nf">Destroy</span><span class="p">(</span><span class="n">CR</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">else</span>
-        <span class="p">{</span>
-            <span class="n">CR</span> <span class="p">=</span> <span class="k">this</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="nf">DontDestroyOnLoad</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="k">public</span> <span class="k">void</span> <span class="nf">ReceiveToken</span><span class="p">(</span><span class="kt">string</span> <span class="n">mint</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(!</span><span class="n">myTokens</span><span class="p">.</span><span class="nf">Contains</span><span class="p">(</span><span class="n">mint</span><span class="p">))</span>
-        <span class="p">{</span>
-            <span class="kt">int</span> <span class="n">addLocation</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
-            <span class="k">while</span> <span class="p">(</span><span class="n">addLocation</span> <span class="p">&lt;</span> <span class="n">myTokens</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">addLocation</span><span class="p">++;</span>
-            <span class="p">}</span>
-            <span class="n">myTokens</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="n">mint</span><span class="p">);</span>
-            <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"Added NFT with Mint ID:  "</span> <span class="p">+</span> <span class="n">mint</span><span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>This script receives the data from the web page javascript functions, passing each mint ID as a string and adding it to an accessable list which can be obtained in any script with <em>CryptoReceiver.CR.myTokens</em> , more data will be added in the future e.g icon, metadata.</p>
-<h2 id='characterselector-cs'>CharacterSelector.cs</h2>
-<blockquote>
-<p>Add these references</p>
-</blockquote>
-<div class="highlight"><pre class="highlight csharp tab-csharp"><code>        <span class="k">public</span> <span class="n">CharacterData</span><span class="p">[]</span> <span class="n">defaultCharacters</span><span class="p">;</span>
-        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">CharacterData</span><span class="p">&gt;</span> <span class="n">ownedCharacters</span><span class="p">;</span>
-</code></pre></div>
-<blockquote>
-<p>On the first line of <em>void Refresh()</em> add this</p>
-</blockquote>
-<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="nf">GetOwnedCharacters</span><span class="p">();</span>
-</code></pre></div>
-<blockquote>
-<p>In <em>void Refresh()</em> look for <em>// Repopulate items</em> and replace that part with this</p>
-</blockquote>
-<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="c1">// Repopulate items:</span>
-<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">defaultCharacters</span><span class="p">.</span><span class="n">Length</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
-<span class="p">{</span>
-  <span class="n">CharacterSelectorItem</span> <span class="n">item</span> <span class="p">=</span> <span class="nf">Instantiate</span><span class="p">(</span><span class="n">itemPrefab</span><span class="p">,</span> <span class="n">content</span><span class="p">);</span>
-  <span class="n">item</span><span class="p">.</span><span class="n">data</span> <span class="p">=</span> <span class="n">defaultCharacters</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-  <span class="n">item</span><span class="p">.</span><span class="n">cs</span> <span class="p">=</span> <span class="k">this</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">ownedCharacters</span><span class="p">.</span><span class="n">Count</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
-<span class="p">{</span>
-  <span class="n">CharacterSelectorItem</span> <span class="n">item</span> <span class="p">=</span> <span class="nf">Instantiate</span><span class="p">(</span><span class="n">itemPrefab</span><span class="p">,</span> <span class="n">content</span><span class="p">);</span>
-  <span class="n">item</span><span class="p">.</span><span class="n">data</span> <span class="p">=</span> <span class="n">ownedCharacters</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-  <span class="n">item</span><span class="p">.</span><span class="n">cs</span> <span class="p">=</span> <span class="k">this</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
-<blockquote>
-<p>Add this function somewhere else in the script</p>
-</blockquote>
-<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="k">void</span> <span class="nf">GetOwnedCharacters</span><span class="p">()</span>
-<span class="p">{</span>
-  <span class="k">foreach</span> <span class="p">(</span><span class="n">CharacterData</span> <span class="n">c</span> <span class="k">in</span> <span class="n">characters</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="k">foreach</span> <span class="p">(</span><span class="kt">string</span> <span class="n">mint</span> <span class="k">in</span> <span class="n">CryptoReceiver</span><span class="p">.</span><span class="n">CR</span><span class="p">.</span><span class="n">myTokens</span><span class="p">)</span>
-    <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="n">mint</span> <span class="p">==</span> <span class="n">c</span><span class="p">.</span><span class="n">mintID</span><span class="p">)</span>
-      <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(!</span><span class="n">ownedCharacters</span><span class="p">.</span><span class="nf">Contains</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
-        <span class="p">{</span>
-          <span class="kt">int</span> <span class="n">addLocation</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
-          <span class="k">while</span> <span class="p">(</span><span class="n">addLocation</span> <span class="p">&lt;</span> <span class="n">ownedCharacters</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span>
-          <span class="p">{</span>
-            <span class="n">addLocation</span><span class="p">++;</span>
-          <span class="p">}</span>
-          <span class="n">ownedCharacters</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
-          <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"Added Character "</span> <span class="p">+</span> <span class="n">c</span><span class="p">.</span><span class="n">name</span><span class="p">);</span>
-        <span class="p">}</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>This script should compare all characters from one list with the mint received from the web page which is stored in our CryptoReceiver and add it to a new list which we will use for selectable characters.</p>
-<h2 id='characterdata-cs'>CharacterData.cs</h2>
-<blockquote>
-<p>Add this variable</p>
-</blockquote>
-<div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="k">public</span> <span class="kt">string</span> <span class="n">mintID</span><span class="p">;</span>
-</code></pre></div>
-<p>This is the variable for each character that is the mint ID of the NFT it represents</p>
-<h2 id='main-menu-scene-3'>Main Menu Scene</h2><div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="c1">// no code in this section</span>
-</code></pre></div>
-<p>Create a new GameObject called <em>CryptoReceiver</em> and add the <em>CryptoReceiver</em> script to it. In the <em>Managers</em> GameObject you can go to the <em>Character Selector</em> component and set which characters you would like the player to be able to use by default in the <em>Default Characters</em> array, these will always be loaded. Then for any characters you want to be linked to a token, open the CharacterData ScriptableObject for that character and add its mint ID to new variable string we added on it.</p>
-<h2 id='webgl-page'>WebGL page</h2><div class="highlight"><pre class="highlight csharp tab-csharp"><code><span class="c1">// no code in this section</span>
-</code></pre></div>
-<p>Once you&#39;ve done everything and uploaded your latest WebGL build, wait until the Main Menu scene has loaded and then click on the <em>Get Account</em> button, you will get a popup to load your Phantom Wallet, just approve and it&#39;ll pass your owned NFTs to the WebGL build. If you click it before the scene has loaded, it can always be clicked again once loaded if your linked characters don&#39;t appear.</p>
+<p>It&#39;s honestly as simple as 2 lines of code in a single script, enjoy.</p>
 <h1 id='troubleshooting'>Troubleshooting</h1>
 <aside class="notice">
 If you have any issues please feel free to contact me in the support Discords for the covered assets or emailing puppygamingdev@gmail.com
